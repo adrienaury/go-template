@@ -1,0 +1,129 @@
+{
+    "name": "go-template", // TODO: REPLACE PROJECT NAME
+    "dockerComposeFile": ["docker-compose.yml"],
+    "service": "vscode",
+    "runServices": ["vscode"],
+    "shutdownAction": "stopCompose",
+    "postCreateCommand": "go mod download",
+    "workspaceFolder": "/workspace",
+    // "overrideCommand": "",
+    "extensions": [
+        // General backend
+        "mohsen1.prettify-json",
+        "bajdzis.vscode-database", // Supports connections to mysql or postgres, over SSL, socked
+        "redhat.vscode-yaml", // Kubernetes and Kedge syntax support
+        // Go
+        "golang.go",
+        // Console
+        "IBM.output-colorizer",
+        // Git
+        "eamodio.gitlens",
+        "mhutchie.git-graph",
+        // Other linters
+        "davidanson.vscode-markdownlint",
+        "ms-azuretools.vscode-docker",
+        // Other helpers
+        "shardulm94.trailing-spaces",
+        "Gruntfuggly.todo-tree",
+        "bierner.emojisense",
+        "stkb.rewrap", // rewrap comments after n characters on one line
+        // Other
+        "jrebocho.vscode-random", // generate random values
+        "alefragnani.Bookmarks",
+        "quicktype.quicktype", // Paste JSON as code
+        "spikespaz.vscode-smoothtype", // smooth cursor animation
+        "vscode-icons-team.vscode-icons",
+        "github.vscode-pull-request-github"
+    ],
+    "settings": {
+        // General settings
+        "files.eol": "\n",
+        // Docker
+        "remote.extensionKind": {
+            "ms-azuretools.vscode-docker": "workspace"
+        },
+        // Golang general settings
+        "go.useLanguageServer": true,
+        "go.autocompleteUnimportedPackages": true,
+        "go.gotoSymbol.includeImports": true,
+        "go.gotoSymbol.includeGoroot": true,
+        "gopls": {
+            "completeUnimported": true,
+            "deepCompletion": true,
+            "usePlaceholders": false
+        },
+        "go.lintTool": "golangci-lint",
+        "go.lintFlags": [
+            "--fast",
+            "--enable", "asciicheck",
+            "--enable", "bodyclose",
+            "--enable", "deadcode",
+            "--enable", "dogsled",
+            "--enable", "dupl",
+            "--enable", "errcheck",
+            "--enable", "exhaustive",
+            "--enable", "exportloopref",
+            "--enable", "gci",
+            "--enable", "gochecknoglobals",
+            "--enable", "gochecknoinits",
+            "--enable", "gocognit",
+            "--enable", "goconst",
+            "--enable", "gocritic",
+            "--enable", "gocyclo",
+            "--enable", "godot",
+            "--enable", "goerr113",
+            "--enable", "goheader",
+            "--enable", "goimports",
+            "--enable", "golint",
+            "--enable", "gomnd",
+            "--enable", "goprintffuncname",
+            "--enable", "gosec",
+            "--enable", "gosimple",
+            "--enable", "govet",
+            "--enable", "ineffassign",
+            "--enable", "interfacer",
+            "--enable", "lll",
+            "--enable", "maligned",
+            "--enable", "misspell",
+            "--enable", "nakedret",
+            "--enable", "nestif",
+            "--enable", "noctx",
+            "--enable", "nolintlint",
+            "--enable", "prealloc",
+            "--enable", "rowserrcheck",
+            "--enable", "scopelint",
+            "--enable", "sqlclosecheck",
+            "--enable", "staticcheck",
+            "--enable", "structcheck",
+            "--enable", "typecheck",
+            "--enable", "unconvert",
+            "--enable", "unparam",
+            "--enable", "unused",
+            "--enable", "varcheck",
+            "--enable", "whitespace",
+        ],
+        // Golang on save
+        "go.buildOnSave": "workspace",
+        "go.lintOnSave": "workspace",
+        "go.vetOnSave": "workspace",
+        "editor.formatOnSave": true,
+        "[go]": {
+            "editor.codeActionsOnSave": {
+                "source.organizeImports": true
+            }
+        },
+        // Golang testing
+        "go.toolsEnvVars": {
+            "GOFLAGS": "-tags=integration"
+        },
+        "gopls.env": {
+            "GOFLAGS": "-tags=integration"
+        },
+        "go.testEnvVars": {},
+        "go.testFlags": ["-v"],
+        "go.testTimeout": "600s",
+        "go.coverOnSingleTest": true,
+        "go.coverOnSingleTestFile": true,
+        "go.coverShowCounts": true,
+    }
+}

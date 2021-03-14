@@ -4,7 +4,7 @@ SHELL := /bin/zsh # Use zsh syntax
 
 # Build variables
 BUILD_DIR ?= bin
-PROJECT_NAME ?= $(git config --local remote.origin.url|sed -n 's#.*/\([^.]*\)\.git#\1#p')
+PROJECT_NAME ?= $(shell git config --local remote.origin.url|sed -n 's#.*/\([^.]*\)\.git#\1#p')
 VERSION ?= $(shell git describe --tags --exact-match 2>/dev/null || git symbolic-ref -q --short HEAD)
 COMMIT_HASH ?= $(shell git rev-parse HEAD 2>/dev/null)
 BUILD_DATE ?= $(shell date +%FT%T%z)
@@ -26,6 +26,7 @@ help:
 
 .PHONY: info
 info: ## Prints build informations
+	@echo PROJECT_NAME=$(PROJECT_NAME)
 	@echo COMMIT_HASH=$(COMMIT_HASH)
 	@echo VERSION=$(VERSION)
 	@echo RELEASE=$(RELEASE)

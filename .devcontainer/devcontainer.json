@@ -1,12 +1,11 @@
 {
     "name": "go-template", // TODO: REPLACE PROJECT NAME
-    "dockerComposeFile": ["docker-compose.yml"],
+    "dockerComposeFile": ["../docker-compose.yml"],
     "service": "vscode",
     "runServices": ["vscode"],
     "shutdownAction": "stopCompose",
-    "postCreateCommand": "go mod download",
+    "postCreateCommand": "make info",
     "workspaceFolder": "/workspace",
-    // "overrideCommand": "",
     "extensions": [
         // General backend
         "mohsen1.prettify-json",

@@ -85,5 +85,5 @@ release: mkdir refresh lint $(patsubst cmd/%,release-%,$(wildcard cmd/*)) ## Bui
 
 .PHONY: publish
 publish: refresh lint ## Publish binaries and documentation
-	cat .goreleaser.template.yml | gomplate > .goreleaser.yml
-	source .env && export GITHUB_TOKEN BUILD_DATE=${BUILD_DATE} && goreleaser release --rm-dist --snapshot
+	cat .goreleaser.template.yml | gomplate > /tmp/.goreleaser.yml
+	source .env && export GITHUB_TOKEN BUILD_DATE=${BUILD_DATE} && goreleaser release -f /tmp/.goreleaser.yml --rm-dist --snapshot

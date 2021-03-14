@@ -3,13 +3,12 @@ env:
 before:
   hooks:
     - go mod download
+dist: ../../dist
 builds:
-  - main: ./cmd/{{.Env.MAIN}}
-    goos:
+  - goos:
       - darwin
       - linux
       - windows
-    binary: {{.Env.MAIN}}
     ldflags:
-      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.CommitDate}} -X main.builtBy=goreleaser
-      - -X main.tag={{.Env.VERSION}} -X main.buildDate={{.Env.BUILD_DATE}}
+      - -s -w -X main.name={{.Env.MAIN}} -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.CommitDate}} -X main.builtBy=goreleaser
+      - -X main.buildDate={{.Env.BUILD_DATE}}

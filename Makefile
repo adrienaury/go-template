@@ -27,6 +27,7 @@ help:
 
 .PHONY: info
 info: ## Prints build informations
+	@echo "==============================================================="
 	@echo PROJECT_MODULE=$(PROJECT_MODULE)
 	@echo PROJECT_NAME=$(PROJECT_NAME)
 	@echo COMMIT_HASH=$(COMMIT_HASH)
@@ -40,6 +41,8 @@ endif
 	@echo DOCKER_IMAGE=$(DOCKER_IMAGE)
 	@echo DOCKER_TAG=$(DOCKER_TAG)
 	@echo BUILD_BY=$(BUILD_BY)
+	@echo BUILD_DATE=$(BUILD_DATE)
+	@echo "==============================================================="
 
 .PHONY: refresh
 refresh:
@@ -79,3 +82,11 @@ release-%:
 
 .PHONY: release
 release: mkdir refresh lint $(patsubst cmd/%,release-%,$(wildcard cmd/*)) ## Build all binaries for production
+
+.PHONY: publish-%
+publish-%:
+	source .env && export GITHUB_TOKEN BUILD_DATE=${BUILD_DATE} MAIN=$* && cd cmd/$* && goreleaser release -f ../../.goreleaser.yml --rm-dist --snapshot
+	#source .env && export GITHUB_TOKEN BUILD_DATE=${BUILD_DATE} MAIN=$* && goreleaser --debug release --rm-dist --snapshot
+
+.PHONY: publish
+publish: mkdir refresh lint $(patsubst cmd/%,publish-%,$(wildcard cmd/*)) ## Publish binaries and documentation

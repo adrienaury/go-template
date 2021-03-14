@@ -83,10 +83,7 @@ release-%:
 .PHONY: release
 release: mkdir refresh lint $(patsubst cmd/%,release-%,$(wildcard cmd/*)) ## Build all binaries for production
 
-.PHONY: publish-%
-publish-%:
-	source .env && export GITHUB_TOKEN BUILD_DATE=${BUILD_DATE} MAIN=$* && cd cmd/$* && goreleaser release -f ../../.goreleaser.yml --rm-dist --snapshot
-	#source .env && export GITHUB_TOKEN BUILD_DATE=${BUILD_DATE} MAIN=$* && goreleaser --debug release --rm-dist --snapshot
-
 .PHONY: publish
-publish: mkdir refresh lint $(patsubst cmd/%,publish-%,$(wildcard cmd/*)) ## Publish binaries and documentation
+publish: refresh lint ## Publish binaries and documentation
+	cat .goreleaser.template.yml | gomplate > .goreleaser.yml
+	source .env && export GITHUB_TOKEN BUILD_DATE=${BUILD_DATE} && goreleaser release --rm-dist --snapshot

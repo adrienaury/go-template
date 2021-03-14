@@ -22,7 +22,12 @@
 
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/adrienaury/go-template/internal/helloservice"
+	"github.com/adrienaury/go-template/pkg/nameservice"
+)
 
 // Provisioned by ldflags
 // nolint: gochecknoglobals
@@ -35,5 +40,11 @@ var (
 )
 
 func main() {
+	fmt.Println("This is the web client.")
+
+	fmt.Printf("%s", helloservice.Hello(nameservice.GetName()))
+	fmt.Println()
+
 	fmt.Printf("%v %v (commit=%v date=%v by=%v)\n", name, version, commit, buildDate, builtBy)
+	fmt.Println()
 }

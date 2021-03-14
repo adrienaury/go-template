@@ -1,0 +1,19 @@
+env:
+  - GO111MODULE=on
+before:
+  hooks:
+    - go mod download
+dist: bin/dist
+builds:
+{{range (file.ReadDir "cmd")}}
+  - id: "{{.}}"
+    binary: "{{.}}"
+    main: "./cmd/{{.}}"
+    goos:
+      - darwin
+      - linux
+      - windows
+    ldflags:
+      - -s -w -X main.name={{.}} -X main.version={{env.Getenv "VERSION"}} -X main.commit={{env.Getenv "COMMIT_HASH"}} -X main.builtBy=goreleaser
+      - -X main.buildDate={{env.Getenv "BUILD_DATE"}}
+{{end}}

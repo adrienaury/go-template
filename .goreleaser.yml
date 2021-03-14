@@ -3,12 +3,28 @@ env:
 before:
   hooks:
     - go mod download
-dist: ../../dist
+dist: bin/dist
 builds:
-  - goos:
+
+  - id: "cli"
+    binary: "cli"
+    main: "./cmd/cli"
+    goos:
       - darwin
       - linux
       - windows
     ldflags:
-      - -s -w -X main.name={{.Env.MAIN}} -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.CommitDate}} -X main.builtBy=goreleaser
-      - -X main.buildDate={{.Env.BUILD_DATE}}
+      - -s -w -X main.name=cli -X main.version=0.0.0 -X main.commit=909af5de91f0973b6eb9e53172ec4b42892bda20 -X main.builtBy=goreleaser
+      - -X main.buildDate=2021-03-14T17:36:17+0000
+
+  - id: "webclient"
+    binary: "webclient"
+    main: "./cmd/webclient"
+    goos:
+      - darwin
+      - linux
+      - windows
+    ldflags:
+      - -s -w -X main.name=webclient -X main.version=0.0.0 -X main.commit=909af5de91f0973b6eb9e53172ec4b42892bda20 -X main.builtBy=goreleaser
+      - -X main.buildDate=2021-03-14T17:36:17+0000
+

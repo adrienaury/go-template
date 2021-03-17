@@ -40,7 +40,7 @@ var (
 )
 
 func main() {
-	fmt.Println("This is the web client.")
+	fmt.Println("This is the web server.")
 
 	fmt.Printf("%s", helloservice.Hello(nameservice.GetName()))
 	fmt.Println()

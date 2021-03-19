@@ -14,7 +14,7 @@ BUILD_BY ?= $(shell git config user.email)
 LDFLAGS += -X main.version=${VERSION} -X main.commit=${COMMIT_HASH} -X main.buildDate=${BUILD_DATE} -X main.builtBy=${BUILD_BY}
 
 # Project variables
-MAIN = "cli"
+MAIN = ${PROJECT_NAME}
 DOCKER_IMAGE = ${USER_NAME}/${PROJECT_NAME}
 DOCKER_TAG ?= $(shell echo -n ${VERSION} | sed -e 's/[^A-Za-z0-9_\\.-]/_/g')
 RELEASE := $(shell [[ $(VERSION) =~ ^[0-9]*.[0-9]*.[0-9]*$$ ]] && echo 1 || echo 0 )

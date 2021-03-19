@@ -95,7 +95,13 @@ publish: mkdir refresh lint ## Publish binaries and documentation
 
 .PHONY: docker-%
 docker-%: release ## Build docker image locally
-	sudo docker build -t ${DOCKER_IMAGE}-$*:${DOCKER_TAG} --build-arg BIN=$* .
+	if [ -f ./Dockerfile.$* ]; then \
+		sudo docker build -t ${DOCKER_IMAGE}-$*:${DOCKER_TAG} --build-arg BIN=$* -f Dockerfile.$* .; \
+	elif [ -f ./cmd/$*/Dockerfile ]; then \
+		sudo docker build -t ${DOCKER_IMAGE}-$*:${DOCKER_TAG} --build-arg BIN=$* -f ./cmd/$*/Dockerfile .; \
+	else \
+		sudo docker build -t ${DOCKER_IMAGE}-$*:${DOCKER_TAG} --build-arg BIN=$* .; \
+	fi
 ifeq (${RELEASE}, 1)
 	sudo docker tag ${DOCKER_IMAGE}-$*:${DOCKER_TAG} ${DOCKER_IMAGE}-$*:${MAJOR}.${MINOR}
 	sudo docker tag ${DOCKER_IMAGE}-$*:${DOCKER_TAG} ${DOCKER_IMAGE}-$*:${MAJOR}

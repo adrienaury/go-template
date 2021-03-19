@@ -14,6 +14,7 @@ BUILD_BY ?= $(shell git config user.email)
 LDFLAGS += -X main.version=${VERSION} -X main.commit=${COMMIT_HASH} -X main.buildDate=${BUILD_DATE} -X main.builtBy=${BUILD_BY}
 
 # Project variables
+MAIN = "cli"
 DOCKER_IMAGE = ${USER_NAME}/${PROJECT_NAME}
 DOCKER_TAG ?= $(shell echo -n ${VERSION} | sed -e 's/[^A-Za-z0-9_\\.-]/_/g')
 RELEASE := $(shell [[ $(VERSION) =~ ^[0-9]*.[0-9]*.[0-9]*$$ ]] && echo 1 || echo 0 )
@@ -95,30 +96,32 @@ publish: mkdir refresh lint ## Publish binaries and documentation
 
 .PHONY: docker-%
 docker-%: release ## Build docker image locally
+	if [ ${MAIN} = "$*" ]; then DOCKER_IMAGE=${DOCKER_IMAGE}; else DOCKER_IMAGE=${DOCKER_IMAGE}-$*; fi; \
 	if [ -f ./Dockerfile.$* ]; then \
-		sudo docker build -t ${DOCKER_IMAGE}-$*:${DOCKER_TAG} --build-arg BIN=$* -f Dockerfile.$* .; \
+		sudo docker build -t $${DOCKER_IMAGE}:${DOCKER_TAG} --build-arg BIN=$* -f Dockerfile.$* .; \
 	elif [ -f ./cmd/$*/Dockerfile ]; then \
-		sudo docker build -t ${DOCKER_IMAGE}-$*:${DOCKER_TAG} --build-arg BIN=$* -f ./cmd/$*/Dockerfile .; \
+		sudo docker build -t $${DOCKER_IMAGE}:${DOCKER_TAG} --build-arg BIN=$* -f ./cmd/$*/Dockerfile .; \
 	else \
-		sudo docker build -t ${DOCKER_IMAGE}-$*:${DOCKER_TAG} --build-arg BIN=$* .; \
+		sudo docker build -t $${DOCKER_IMAGE}:${DOCKER_TAG} --build-arg BIN=$* .; \
+	fi; \
+    if [ ${RELEASE} -eq 1 ]; then \
+		sudo docker tag $${DOCKER_IMAGE}:${DOCKER_TAG} $${DOCKER_IMAGE}:${MAJOR}.${MINOR}; \
+		sudo docker tag $${DOCKER_IMAGE}:${DOCKER_TAG} $${DOCKER_IMAGE}:${MAJOR}; \
+		sudo docker tag $${DOCKER_IMAGE}:${DOCKER_TAG} $${DOCKER_IMAGE}:latest; \
 	fi
-ifeq (${RELEASE}, 1)
-	sudo docker tag ${DOCKER_IMAGE}-$*:${DOCKER_TAG} ${DOCKER_IMAGE}-$*:${MAJOR}.${MINOR}
-	sudo docker tag ${DOCKER_IMAGE}-$*:${DOCKER_TAG} ${DOCKER_IMAGE}-$*:${MAJOR}
-	sudo docker tag ${DOCKER_IMAGE}-$*:${DOCKER_TAG} ${DOCKER_IMAGE}-$*:latest
-endif
 
 .PHONY: docker
 docker: $(patsubst cmd/%,docker-%,$(wildcard cmd/*)) ## Build all docker images locally
 
 .PHONY: push-%
 push-%: docker ## Push docker image on DockerHub
-	sudo docker push ${DOCKER_IMAGE}-$*:${DOCKER_TAG}
-ifeq (${RELEASE}, 1)
-	sudo docker push ${DOCKER_IMAGE}-$*:${MAJOR}.${MINOR}
-	sudo docker push ${DOCKER_IMAGE}-$*:${MAJOR}
-	sudo docker push ${DOCKER_IMAGE}-$*:latest
-endif
+	if [ ${MAIN} = "$*" ]; then DOCKER_IMAGE=${DOCKER_IMAGE}; else DOCKER_IMAGE=${DOCKER_IMAGE}-$*; fi; \
+	sudo docker push $${DOCKER_IMAGE}:${DOCKER_TAG}; \
+    if [ ${RELEASE} -eq 1 ]; then \
+		sudo docker push $${DOCKER_IMAGE}:${MAJOR}.${MINOR}; \
+		sudo docker push $${DOCKER_IMAGE}:${MAJOR}; \
+		sudo docker push $${DOCKER_IMAGE}:latest; \
+	fi
 
 .PHONY: push
 push: $(patsubst cmd/%,push-%,$(wildcard cmd/*)) ## Push all docker images on DockerHub

@@ -1,0 +1,76 @@
+# Données exemple
+data:
+  public.language: |-
+    { language_id: 1, name: "English"}
+    { language_id: 2, name: "Italian"}
+  public.film: |-
+    { film_id: 1, title: "ACADEMY DINOSAUR", release_year: 2006, language_id: 1}
+    { film_id: 2, title: "ACE GOLDFINGER", release_year: 2006, language_id: 1}
+    { film_id: 3, title: "ACADEMY GOLDFINGER", release_year: 2006, language_id: 2}
+---
+# Cas simple : suivi de la relation dans le sens parent->enfant
+data:
+  filter:
+    - "{ film_id=1 }"
+graph:
+  - 0->1
+steps:
+  - id: 0
+    ingress:
+      from:
+        name: filter
+        keys:
+          - film_id
+      to:
+        name: public.film
+        keys:
+          - film_id
+    cycles: []
+  - id: 1
+    ingress:
+      name: langage
+      from:
+        name: public.film
+        keys:
+          - language_id
+      to:
+        name: public.language
+        keys:
+          - language_id
+    cycles: []
+expected: |-
+  { film_id: 1, title: "ACADEMY DINOSAUR", release_year: 2006, language_id: 1, langage: { language_id: 1, name: "English"} }
+---
+# Cas relation inversé : suivi de la relation dans le sens enfant->parent
+data:
+  filter:
+    - "{ language_id=1 }"
+graph:
+  - 0->1
+steps:
+  - id: 0
+    ingress:
+      from:
+        name: filter
+        keys:
+          - language_id
+      to:
+        name: public.language
+        keys:
+          - language_id
+    cycles: []
+  - id: 1
+    ingress:
+      array: true
+      name: films
+      from:
+        name: public.language
+        keys:
+          - language_id
+      to:
+        name: public.film
+        keys:
+          - original_language_id
+    cycles: []
+expected: |-
+  { language_id: 1, name: "English", films: [ { film_id: 1, title: "ACADEMY DINOSAUR", release_year: 2006, language_id: 1}, { film_id: 2, title: "ACE GOLDFINGER", release_year: 2006, language_id: 1} ] }

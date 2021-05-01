@@ -8,7 +8,7 @@
         "vscode"
     ],
     "shutdownAction": "stopCompose",
-    "postCreateCommand": "make info",
+    "postCreateCommand": "touch ~/.dockerhub.yml && chmod 0600 ~/.dockerhub.yml",
     "workspaceFolder": "/workspace",
     "remoteEnv": {
         "PATH": "${containerEnv:PATH}:/workspace/bin/"

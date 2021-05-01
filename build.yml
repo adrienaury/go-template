@@ -37,7 +37,7 @@ targets:
       - print: "test     Run all tests with coverage [will trigger: info->refresh->lint]"
       - print: "release  Compile binary files for production [will trigger: info->refresh->lint->test]"
       ## Continuous Deployment
-      - print: "publish  Publish binary files to Github and images to Dockerhub [will trigger: info->refresh->compile->test->lint->release]"
+      - print: "publish  Publish tagged binary cmd's to Github [will trigger: info->refresh->lint->test]"
       - print: ""
       - print: 'Example : neon -props "{latest: true}" promote publish'
 
@@ -165,6 +165,17 @@ targets:
       - ldflags = ldflags + " -s -w" # Omit the DWARF symbol table. Omit the symbol table and debug information.
       - call: compile
 
+  publish:
+    doc: "publish tagged binary cmd's to Github"
+    depends: ["info", "refresh", lint, "test"]
+    steps:
+      - ldflags = ldflags + " -s -w" # Omit the DWARF symbol table. Omit the symbol table and debug information.
+      - ldflags = ldflags + " -X main.version=" + tag + " -X main.commit=" + commit + " -X main.buildDate=" + date + " -X main.builtBy=" + by
+      - $: (export LDFLAGS="={ldflags}"; cat .goreleaser.template.yml | gomplate)
+        1>: ={BUILD_DIR}/.goreleaser.yml
+        1x: true
+      - $: goreleaser release -f ={BUILD_DIR}/.goreleaser.yml --rm-dist --snapshot # TODO : remove --rm-dist --snapshot
+
   build-docker:
     doc: "build docker images locally"
     unless: 'newer("={BUILD_DIR}/last", find(".", "Dockerfile", "**/*.sh", ".zshrc", ".p10k.zsh"))'
@@ -210,7 +221,7 @@ targets:
           - $: return 1
 
   # run "neon -props '{latest: true}' publish" to include latest tag
-  publish:
+  docker-publish:
     doc: "push docker images to Dockerhub"
     # unless: 'is_release != "yes"' => is_release unknown variable, issue to open
     depends: ["info", "release", "docker-login"]

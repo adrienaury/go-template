@@ -7,6 +7,7 @@ configuration: ~/.dockerhub.yml
 
 properties:
   latest: false
+  MODULE: "" # leave empty to default to the git remote url (e.g. "github.com/<usename>/<reponame>")
 
 targets:
   help:
@@ -60,7 +61,17 @@ targets:
         <: "=version"
         1=: "version_patch"
         3x: true
+      - if: MODULE == ""
+        then:
+          - $: "git config --local remote.origin.url|sed -n 's#^.*//\\(.*\\)\\.git$#\\1#p'" # .*//(.*)\.git => https://github.com/<user>/<repo>.git => github.com/<user>/<repo>
+            1=: "mod"
+            3x: true
+        else:
+          - $: "echo -n ={MODULE}"
+            1=: "mod"
+            3x: true
       - print: |-
+          MODULE  = ={mod}
           TAG     = ={tag}
           COMMIT  = ={commit}
           DATE    = ={date}

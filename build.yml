@@ -6,10 +6,13 @@ configuration: ~/.dockerhub.yml
 # DOCKERHUB_PASS: <your dockerhub password or a dockerhub token>
 
 properties:
-  latest: false
+  # Build Configuration (edit this section to override default values)
   MODULE: "" # leave empty to default to the git remote url (e.g. "github.com/<usename>/<reponame>")
   PROJECT: "" # leave empty to default to the git repository name (e.g. "<reponame>")
   LDFLAGS: "" # add custom ldflags
+  # Build parameters (use the -props flag to change these default values)
+  latest: false # Do not tag the Docker image with latest, specify othewise with `-props "{latest: true}"`
+  binary: [] # By default, all paths under the cmd/ folder are built, specify a different folder list with `-props "{binary: ["other/path", "to/build"]}"`
 
 targets:
   help:
@@ -112,6 +115,15 @@ targets:
       - $: "go mod tidy"
 
   build:
+    doc: "build binaries images locally"
+    depends: ["info", "refresh"]
+    steps:
+      - if: len(binary) == 0
+        then:
+          - binary = appendpath("cmd", find("cmd", "*"))
+      - print: 'Building ={join(binary, ", ")}'
+
+  build-docker:
     doc: "build docker images locally"
     unless: 'newer("build/last", find(".", "Dockerfile", "**/*.sh", ".zshrc", ".p10k.zsh"))'
     depends: ["info", "refresh"]

@@ -29,7 +29,7 @@ help:
 
 .PHONY: info
 info: ## Print build informations
-	@neon
+	@neon info
 
 .PHONY: refresh
 refresh:

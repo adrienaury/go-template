@@ -51,8 +51,14 @@ release-%: warning
 release: warning
 	@neon release
 
+.PHONY: docker
+docker: warning
+	@neon docker
+
+.PHONY: docker-tag
+docker-tag: warning
+	@neon docker-tag
+
 .PHONY: publish
 publish: warning
-	@echo TODO
-	# cat .goreleaser.template.yml | gomplate > ${BUILD_DIR}/.goreleaser.yml
-	# source .env && export GITHUB_TOKEN BUILD_DATE=${BUILD_DATE} && goreleaser release -f ${BUILD_DIR}/.goreleaser.yml --rm-dist --snapshot
+	@neon publish

@@ -11,13 +11,11 @@ services:
     volumes:
       - ./:/workspace
       - ~/.ssh:/home/vscode/.ssh:ro
-      - ~/.ssh:/root/.ssh:ro
-      - ~/.git:/root/.git:ro
+      - ~/.ssh:/home/vscode/.ssh:ro
+      - ~/.git:/home/vscode/.git:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
-    environment:
-      - TZ=
     cap_add:
       - SYS_PTRACE
     security_opt:
       - seccomp:unconfined
-    entrypoint: zsh -c "while sleep 1000; do :; done"
+    entrypoint: tail -f /dev/null

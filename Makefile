@@ -29,22 +29,7 @@ help:
 
 .PHONY: info
 info: ## Print build informations
-	@echo "==============================================================="
-	@echo PROJECT_MODULE=$(PROJECT_MODULE)
-	@echo PROJECT_NAME=$(PROJECT_NAME)
-	@echo COMMIT_HASH=$(COMMIT_HASH)
-	@echo VERSION=$(VERSION)
-	@echo RELEASE=$(RELEASE)
-ifeq (${RELEASE}, 1)
-	@echo MAJOR=$(MAJOR)
-	@echo MINOR=$(MINOR)
-	@echo PATCH=$(PATCH)
-endif
-	@echo DOCKER_IMAGE=$(DOCKER_IMAGE)
-	@echo DOCKER_TAG=$(DOCKER_TAG)
-	@echo BUILD_BY=$(BUILD_BY)
-	@echo BUILD_DATE=$(BUILD_DATE)
-	@echo "==============================================================="
+	@neon
 
 .PHONY: refresh
 refresh:

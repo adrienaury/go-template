@@ -14,6 +14,7 @@
         "PATH": "${containerEnv:PATH}:/workspace/bin/"
     },
     "extensions": [
+        "golang.Go",
 		"eamodio.gitlens",
 		"donjayamanne.githistory",
 		"DavidAnson.vscode-markdownlint",

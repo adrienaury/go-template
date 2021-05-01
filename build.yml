@@ -1,5 +1,5 @@
 default: "help"
-expose: ["help", "info", "refresh", "promote", "build", "release", "publish"]
+expose: ["help", "info", "promote", "refresh", "compile", "release", "publish"]
 configuration: ~/.dockerhub.yml
 # ~/.dockerhub.yml should contains:
 # DOCKERHUB_USER: <your dockerhub user>
@@ -9,10 +9,11 @@ properties:
   # Build Configuration (edit this section to override default values)
   MODULE: "" # leave empty to default to the git remote url (e.g. "github.com/<usename>/<reponame>")
   PROJECT: "" # leave empty to default to the git repository name (e.g. "<reponame>")
-  LDFLAGS: "" # add custom ldflags
+  LDFLAGS: "" # add custom standard ldflags, will be applied everywhere everytime
   BUILD_DIR: "bin" # subfolder where the build will output
   # Build parameters (use the -props flag to change these default values)
   latest: false # Do not tag the Docker image with latest, specify othewise with `-props "{latest: true}"`
+  ldflags: "" # Specify a additional ldflags with `-props "{ldflags: '<flags>'}"`
   buildpaths: [] # By default, all paths under the cmd/ folder are built, specify a different folder list with `-props "{buildpaths: ["other/path", "to/build"]}"`
 
 targets:
@@ -27,7 +28,7 @@ targets:
       - print: "info     print build informations"
       - print: "promote  promote the project with a new tag based on git log history"
       - print: "refresh  refresh go modules (add missing and remove unused modules) [will trigger: info]"
-      - print: "build    build docker images locally [will trigger: info->refresh]"
+      - print: "compile  compile binary files locally [will trigger: info->refresh]"
       - print: "release  build docker images locally with tagged versions [will trigger: info->refresh->build]"
       - print: "publish  publish docker images to Dockerhub [will trigger: info->refresh->build->release]"
       - print: ""
@@ -115,11 +116,11 @@ targets:
       - $: "go mod init ={mod}"
       - $: "go mod tidy"
 
-  build:
-    doc: "build binaries images locally"
+  compile:
+    doc: "compile binary files locally"
     depends: ["info", "refresh"]
     steps:
-      - ldflags = "-X main.version=" + tag + " -X main.commit=" + commit + " -X main.buildDate=" + date + " -X main.builtBy=" + by
+      - ldflags = ldflags + " -X main.version=" + tag + " -X main.commit=" + commit + " -X main.buildDate=" + date + " -X main.builtBy=" + by
       - if: len(buildpaths) == 0
         then:
           - buildpaths = appendpath("cmd", find("cmd", "*"))

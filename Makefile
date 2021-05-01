@@ -27,13 +27,13 @@ promote: warning
 refresh: warning
 	@neon refresh
 
-.PHONY: build-%
+.PHONY: compile-%
 build-%: warning
-	@echo TODO
-	# GO111MODULE=on go build ${GOARGS} -ldflags "-X main.name=$* ${LDFLAGS}" -o ${BUILD_DIR}/$* ./cmd/$*
+	@neon -props "{buildpaths: ["cmd/$*"]}" compile
 
-.PHONY: build
-build: $(patsubst cmd/%,build-%,$(wildcard cmd/*))
+.PHONY: compile
+build: warning
+	@neon compile
 
 .PHONY: test
 test: warning

@@ -15,6 +15,8 @@ properties:
   latest: false # Do not tag the Docker image with latest, specify othewise with `-props "{latest: true}"`
   ldflags: "" # Specify a additional ldflags with `-props "{ldflags: '<flags>'}"`
   buildpaths: [] # By default, all paths under the cmd/ folder are built, specify a different folder list with `-props "{buildpaths: ["other/path", "to/build"]}"`
+  linters: [] # List of linters to run on the lint target, if left empty : run all fast linters
+  lintersno: ["scopelint", "forbidigo"] # List of linters to exclude on running the lint target
 
 targets:
   help:
@@ -29,8 +31,10 @@ targets:
       - print: "promote  promote the project with a new tag based on git log history"
       - print: "refresh  refresh go modules (add missing and remove unused modules) [will trigger: info]"
       - print: "compile  compile binary files locally [will trigger: info->refresh]"
-      - print: "release  build docker images locally with tagged versions [will trigger: info->refresh->build]"
-      - print: "publish  publish docker images to Dockerhub [will trigger: info->refresh->build->release]"
+      - print: "test     run all tests with coverage [will trigger: info->refresh->compile]"
+      - print: "lint     examine source code and report suspicious constructs [will trigger: info->refresh->compile->test]"
+      - print: "release  compile binary files for production [will trigger: info->refresh->compile->test->lint]"
+      - print: "publish  publish binary files to Github and images to Dockerhub [will trigger: info->refresh->compile->test->lint->release]"
       - print: ""
       - print: 'Example : neon -props "{latest: true}" promote publish'
 
@@ -132,6 +136,24 @@ targets:
             pathcomponents = split(unixpath(path), "/")
             name = pathcomponents[len(pathcomponents)-1]
           - $: go build -ldflags "-X main.name=={name} ={ldflags} ={LDFLAGS}" -o ./={BUILD_DIR}/={name} ./={path}
+
+  test:
+    doc: "run all tests with coverage"
+    depends: ["info", "refresh", "compile"]
+    steps:
+      - $: go test -coverprofile=./={BUILD_DIR}/coverage.txt -covermode=atomic ./...
+
+  lint:
+    doc: "examine source code and report suspicious constructs"
+    depends: ["info", "refresh", "compile", "test"]
+    steps:
+      - if: len(linters) == 0
+        then:
+          - $: golangci-lint run --fast --enable-all ={replace(join(appendpath("--disable", lintersno), " "), "/", " ")}
+            :: true
+        else:
+          - $: golangci-lint run ={replace(join(appendpath("--enable", linters), " "), "/", " ")} ={replace(join(appendpath("--disable", lintersno), " "), "/", " ")}
+            :: true
 
   build-docker:
     doc: "build docker images locally"

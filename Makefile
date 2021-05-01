@@ -37,12 +37,11 @@ build: warning
 
 .PHONY: test
 test: warning
-	@echo TODO
-	# GO111MODULE=on go test -coverprofile=${BUILD_DIR}/coverage.txt -covermode=atomic ./...
+	@neon test
 
 .PHONY: lint
-lint: warning ## Examines Go source code and reports suspicious constructs
-	golangci-lint run
+lint: warning
+	@neon lint
 
 .PHONY: release-%
 release-%: warning

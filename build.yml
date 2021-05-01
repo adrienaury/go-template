@@ -10,9 +10,10 @@ properties:
   MODULE: "" # leave empty to default to the git remote url (e.g. "github.com/<usename>/<reponame>")
   PROJECT: "" # leave empty to default to the git repository name (e.g. "<reponame>")
   LDFLAGS: "" # add custom ldflags
+  BUILD_DIR: "bin" # subfolder where the build will output
   # Build parameters (use the -props flag to change these default values)
   latest: false # Do not tag the Docker image with latest, specify othewise with `-props "{latest: true}"`
-  binary: [] # By default, all paths under the cmd/ folder are built, specify a different folder list with `-props "{binary: ["other/path", "to/build"]}"`
+  buildpaths: [] # By default, all paths under the cmd/ folder are built, specify a different folder list with `-props "{buildpaths: ["other/path", "to/build"]}"`
 
 targets:
   help:
@@ -44,7 +45,7 @@ targets:
       - $: "git rev-parse HEAD 2>/dev/null"
         1=: "commit"
         3x: true
-      - "date = now()"
+      - "date = now()[0:10]"
       - try:
           - $: "git config user.email"
             1=: "by"
@@ -118,19 +119,27 @@ targets:
     doc: "build binaries images locally"
     depends: ["info", "refresh"]
     steps:
-      - if: len(binary) == 0
+      - ldflags = "-X main.version=" + tag + " -X main.commit=" + commit + " -X main.buildDate=" + date + " -X main.builtBy=" + by
+      - if: len(buildpaths) == 0
         then:
-          - binary = appendpath("cmd", find("cmd", "*"))
-      - print: 'Building ={join(binary, ", ")}'
+          - buildpaths = appendpath("cmd", find("cmd", "*"))
+      - for: path
+        in: buildpaths
+        do:
+          - print: Building ={path}
+          - |
+            pathcomponents = split(unixpath(path), "/")
+            name = pathcomponents[len(pathcomponents)-1]
+          - $: go build -ldflags "-X main.name=={name} ={ldflags} ={LDFLAGS}" -o ./={BUILD_DIR}/={name} ./={path}
 
   build-docker:
     doc: "build docker images locally"
-    unless: 'newer("build/last", find(".", "Dockerfile", "**/*.sh", ".zshrc", ".p10k.zsh"))'
+    unless: 'newer("={BUILD_DIR}/last", find(".", "Dockerfile", "**/*.sh", ".zshrc", ".p10k.zsh"))'
     depends: ["info", "refresh"]
     steps:
       - print: "Executing build target"
         color: cyan
-      - mkdir: "build"
+      - mkdir: =BUILD_DIR
       - $: "echo TODO"
     #- $: 'sudo docker build -q --iidfile build/last -t adrienaury/go-devcontainer:={tag} --target go-devcontainer .'
 
@@ -149,7 +158,7 @@ targets:
             then:
               - $: "echo TODO"
             # - $: 'sudo docker tag adrienaury/go-devcontainer:={tag} adrienaury/go-devcontainer:latest'
-          - $: "sudo docker images --no-trunc | grep $(cat build/last)"
+          - $: "sudo docker images --no-trunc | grep $(cat ={BUILD_DIR}/last)"
         else:
           - print: "Skipping release target (not a release)"
             color: red

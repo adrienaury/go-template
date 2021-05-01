@@ -11,8 +11,6 @@ services:
     volumes:
       - ./:/workspace
       - ~/.ssh:/home/vscode/.ssh:ro
-      - ~/.ssh:/home/vscode/.ssh:ro
-      - ~/.git:/home/vscode/.git:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
     cap_add:
       - SYS_PTRACE

@@ -8,6 +8,7 @@ configuration: ~/.dockerhub.yml
 properties:
   latest: false
   MODULE: "" # leave empty to default to the git remote url (e.g. "github.com/<usename>/<reponame>")
+  PROJECT: "" # leave empty to default to the git repository name (e.g. "<reponame>")
 
 targets:
   help:
@@ -70,8 +71,19 @@ targets:
           - $: "echo -n ={MODULE}"
             1=: "mod"
             3x: true
+      - if: PROJECT == ""
+        then:
+          - $: "cut -f3 -d/"
+            <: "=mod"
+            1=: "project"
+            3x: true
+        else:
+          - $: "echo -n ={PROJECT}"
+            1=: "project"
+            3x: true
       - print: |-
           MODULE  = ={mod}
+          PROJECT = ={project}
           TAG     = ={tag}
           COMMIT  = ={commit}
           DATE    = ={date}

@@ -45,11 +45,11 @@ lint: warning
 
 .PHONY: release-%
 release-%: warning
-	@echo TODO
-	# GO111MODULE=on go build ${GOARGS} -ldflags "-w -s -X main.name=$* ${LDFLAGS}" -o ${BUILD_DIR}/$* ./cmd/$*
+	@neon -props "{buildpaths: ["cmd/$*"]}" release
 
 .PHONY: release
-release: $(patsubst cmd/%,release-%,$(wildcard cmd/*)) ## Build all binaries for production
+release: warning
+	@neon release
 
 .PHONY: publish
 publish: warning

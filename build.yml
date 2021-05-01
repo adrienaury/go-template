@@ -28,12 +28,15 @@ targets:
       - print: ""
       - print: "help     print this message"
       - print: "info     print build informations"
-      - print: "promote  promote the project with a new tag based on git log history"
+      ## Stand-alone targets
       - print: "refresh  refresh go modules (add missing and remove unused modules) [will trigger: info]"
+      - print: "promote  promote the project with a new tag based on git log history [will trigger: info]"
       - print: "compile  compile binary files locally [will trigger: info->refresh]"
-      - print: "test     run all tests with coverage [will trigger: info->refresh->compile]"
-      - print: "lint     examine source code and report suspicious constructs [will trigger: info->refresh->compile->test]"
-      - print: "release  compile binary files for production [will trigger: info->refresh->compile->test->lint]"
+      ## Continuous Integration
+      - print: "lint     examine source code and report suspicious constructs [will trigger: info->refresh]"
+      - print: "test     run all tests with coverage [will trigger: info->refresh->lint]"
+      - print: "release  compile binary files for production [will trigger: info->refresh->lint->test]"
+      ## Continuous Deployment
       - print: "publish  publish binary files to Github and images to Dockerhub [will trigger: info->refresh->compile->test->lint->release]"
       - print: ""
       - print: 'Example : neon -props "{latest: true}" promote publish'
@@ -137,15 +140,9 @@ targets:
             name = pathcomponents[len(pathcomponents)-1]
           - $: go build -ldflags "-X main.name=={name} ={ldflags} ={LDFLAGS}" -o ./={BUILD_DIR}/={name} ./={path}
 
-  test:
-    doc: "run all tests with coverage"
-    depends: ["info", "refresh", "compile"]
-    steps:
-      - $: go test -coverprofile=./={BUILD_DIR}/coverage.txt -covermode=atomic ./...
-
   lint:
     doc: "examine source code and report suspicious constructs"
-    depends: ["info", "refresh", "compile", "test"]
+    depends: ["info", "refresh"]
     steps:
       - if: len(linters) == 0
         then:
@@ -154,6 +151,19 @@ targets:
         else:
           - $: golangci-lint run ={replace(join(appendpath("--enable", linters), " "), "/", " ")} ={replace(join(appendpath("--disable", lintersno), " "), "/", " ")}
             :: true
+
+  test:
+    doc: "run all tests with coverage"
+    depends: ["info", "refresh", "lint"]
+    steps:
+      - $: go test -coverprofile=./={BUILD_DIR}/coverage.txt -covermode=atomic ./...
+
+  release:
+    doc: "compile binary files for production"
+    depends: ["info", "refresh", lint, "test"]
+    steps:
+      - ldflags = ldflags + " -s -w" # Omit the DWARF symbol table. Omit the symbol table and debug information.
+      - call: compile
 
   build-docker:
     doc: "build docker images locally"
@@ -166,8 +176,8 @@ targets:
       - $: "echo TODO"
     #- $: 'sudo docker build -q --iidfile build/last -t adrienaury/go-devcontainer:={tag} --target go-devcontainer .'
 
-  # run "neon -props '{latest: true}' release" to include latest tag
-  release:
+  # run "neon -props '{latest: true}' build-docker-tag" to include latest tag
+  build-docker-tag:
     doc: "build docker images locally with tagged versions"
     # unless: 'is_release != "yes"' => is_release unknown variable, issue to open
     depends: ["info", "refresh", "build"]

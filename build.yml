@@ -1,5 +1,5 @@
 default: "help"
-expose: ["help", "info", "promote", "build", "release", "publish"]
+expose: ["help", "info", "refresh", "promote", "build", "release", "publish"]
 configuration: ~/.dockerhub.yml
 # ~/.dockerhub.yml should contains:
 # DOCKERHUB_USER: <your dockerhub user>
@@ -9,6 +9,7 @@ properties:
   latest: false
   MODULE: "" # leave empty to default to the git remote url (e.g. "github.com/<usename>/<reponame>")
   PROJECT: "" # leave empty to default to the git repository name (e.g. "<reponame>")
+  LDFLAGS: "" # add custom ldflags
 
 targets:
   help:
@@ -21,9 +22,10 @@ targets:
       - print: "help     print this message"
       - print: "info     print build informations"
       - print: "promote  promote the project with a new tag based on git log history"
-      - print: "build    build docker images locally [will trigger: info]"
-      - print: "release  build docker images locally with tagged versions [will trigger: info->build]"
-      - print: "publish  publish docker images to Dockerhub [will trigger: info->build->release]"
+      - print: "refresh  refresh go modules (add missing and remove unused modules) [will trigger: info]"
+      - print: "build    build docker images locally [will trigger: info->refresh]"
+      - print: "release  build docker images locally with tagged versions [will trigger: info->refresh->build]"
+      - print: "publish  publish docker images to Dockerhub [will trigger: info->refresh->build->release]"
       - print: ""
       - print: 'Example : neon -props "{latest: true}" promote publish'
 
@@ -101,10 +103,18 @@ targets:
         2x: true
       - $: "echo Promoted to $(svu current)"
 
+  refresh:
+    doc: "refresh go modules (add missing and remove unused modules)"
+    depends: "info"
+    steps:
+      - $: "rm -f go.mod go.sum"
+      - $: "go mod init ={mod}"
+      - $: "go mod tidy"
+
   build:
     doc: "build docker images locally"
     unless: 'newer("build/last", find(".", "Dockerfile", "**/*.sh", ".zshrc", ".p10k.zsh"))'
-    depends: "info"
+    depends: ["info", "refresh"]
     steps:
       - print: "Executing build target"
         color: cyan
@@ -116,7 +126,7 @@ targets:
   release:
     doc: "build docker images locally with tagged versions"
     # unless: 'is_release != "yes"' => is_release unknown variable, issue to open
-    depends: ["info", "build"]
+    depends: ["info", "refresh", "build"]
     steps:
       - if: 'is_release == "yes"'
         then:
@@ -134,8 +144,16 @@ targets:
 
   docker-login:
     steps:
-      - $: "sudo docker login -u ={DOCKERHUB_USER} -p ={DOCKERHUB_PASS}"
-        2x: true
+      - try:
+          - $: "sudo docker login -u ={DOCKERHUB_USER} -p ={DOCKERHUB_PASS}"
+            2x: true
+        catch:
+          - print: |
+              To use this target, make sure your credentials are valid in the file ~/.dockerhub.yml
+              The content of the file should be :
+                DOCKERHUB_USER: <your dockerhub user>
+                DOCKERHUB_PASS: <your dockerhub password or a dockerhub token>
+          - $: return 1
 
   # run "neon -props '{latest: true}' publish" to include latest tag
   publish:

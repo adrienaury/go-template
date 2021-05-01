@@ -26,6 +26,7 @@
 		"aaron-bond.better-comments",
 		"quicktype.quicktype",
 		"spikespaz.vscode-smoothtype",
+        "EditorConfig.EditorConfig",
     ],
     "settings": {
         // General settings

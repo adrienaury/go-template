@@ -59,19 +59,19 @@ Accept and enjoy !
 - Git commit message semantic validation
 - Docker compatible (docker client and docker-compose are available inside the devcontainer)
 - Build targets (run with `make` or `neon`) :
-  - help : default target, print help message
-  - info : print information on the build pipeline
-  - promote : promote the project to a new tag using semantic versioning
-  - refresh : refresh go modules dependencies
-  - compile : compile sources
-  - lint : check the code for suspicious constructs
-  - test : run the unit tests
-  - release : compile binaries, with production flags
-  - test-int : run integration tests with venom
-  - publish : publish binaries on Github with goreleaser
-  - docker : build docker images
-  - docker-tag : tag docker images using semantic versioning
-  - docker-publish : publish docker images on Dockerhub
+  - [`help`](#help) : default target, print help message
+  - [`info`](#info) : print information on the build pipeline
+  - [`promote`](#promote) : promote the project to a new tag using semantic versioning
+  - [`refresh`](#refresh) : refresh go modules dependencies
+  - [`compile`](#compile) : compile sources
+  - [`lint`](#lint) : check the code for suspicious constructs
+  - [`test`](#test) : run the unit tests
+  - [`release`](#release) : compile binaries, with production flags
+  - [`test-int`](#test-int) : run integration tests with venom
+  - [`publish`](#publish) : publish binaries on Github with goreleaser
+  - [`docker`](#docker) : build docker images
+  - [`docker-tag`](#docker-tag) : tag docker images using semantic versioning
+  - [`docker-publish`](#docker-publish) : publish docker images on Dockerhub
 
 ### Build targets
 
@@ -91,6 +91,8 @@ This text bloc show how target are related to each other. E.g. running the targe
                   ┖─ lint ─ test ┰ release ─ test-int
                                  ┖─publish
 ```
+
+Neon targets are also mapped to a Makefile, so running `make compile` will produce the same result as running `neon compile`.
 
 #### Help
 
@@ -257,10 +259,10 @@ Running command: golangci-lint run --fast --enable-all --disable scopelint --dis
 OK
 ```
 
-By default, all fast linters are enabled (`--fast` and `--enable-all` flags on `golangci-lint`) but you can change this with the following build properties :
+By default, all fast linters are enabled (`--fast` and `--enable-all` flags) but you can change this with the following build properties :
 
-- linters : an array of linters to enable, if left empty then all fast linters are enabled.
-- lintersno : an array of linters to disable, by default `scopelint` (deprecated) and `forbidigo` are disabled.
+- `linters` : an array of linters to enable, if left empty then all fast linters are enabled.
+- `lintersno` : an array of linters to disable, by default `scopelint` (deprecated) and `forbidigo` are disabled.
 
 To change the default values, edit the `build.yml` file and look for the properties names `linters` or `lintersno`.
 
@@ -317,7 +319,7 @@ OK
 
 Compile binary files for production.
 
-The only difference with the [`compile`](#compile) target is with the `ldflags` passed to the Go linker (it will produce a smaller binary) and the dependency to other targets (`lint` and `test`).
+The only difference with the [`compile`](#compile) target is with the `ldflags` passed to the Go linker (it will produce a smaller binary) and the dependency to other targets ([`lint`](#lint) and [`test`](#test)).
 
 ```console
 $ neon release
@@ -349,6 +351,85 @@ OK
 ```
 
 The build properties are the same as the [`compile`](#compile) target.
+
+#### Test-int
+
+Run all integration tests. Under the hood the tool [`venom`](https://github.com/ovh/venom) is used.
+
+By default it will run every test suites under the folder `test/suites`.
+
+```console
+neon test-int
+----------------------------------------------- info --
+MODULE  = github.com/adrienaury/go-template
+PROJECT = go-template
+TAG     = refactor
+COMMIT  = 9791b0c79b55f2f34517d7e6b64d4900c8c7f2ce
+DATE    = 2021-05-02
+BY      = adrienaury@gmail.com
+RELEASE = no
+--------------------------------------------- refresh --
+go: creating new go.mod: module github.com/adrienaury/go-template
+go: to add module requirements and sums:
+        go mod tidy
+------------------------------------------------ lint --
+Running command: golangci-lint run --fast --enable-all --disable scopelint --disable forbidigo
+------------------------------------------------ test --
+?       github.com/adrienaury/go-template/cmd/cli       [no test files]
+?       github.com/adrienaury/go-template/cmd/webserver [no test files]
+?       github.com/adrienaury/go-template/internal/helloservice [no test files]
+?       github.com/adrienaury/go-template/pkg/nameservice       [no test files]
+--------------------------------------------- release --
+Calling target 'compile'
+--------------------------------------------- compile --
+Building cmd/cli
+Building cmd/webserver
+-------------------------------------------- test-int --
+ • run cli (test/suites/01-run-cli.yml)
+        • no-arguments SUCCESS
+ • run webserver (test/suites/02-run-webserver.yml)
+        • no-arguments SUCCESS
+OK
+```
+
+#### Docker
+
+Build docker images locally.
+
+```console
+neon docker
+----------------------------------------------- info --
+MODULE  = github.com/adrienaury/go-template
+PROJECT = go-template
+TAG     = refactor
+COMMIT  = 9791b0c79b55f2f34517d7e6b64d4900c8c7f2ce
+DATE    = 2021-05-02
+BY      = adrienaury@gmail.com
+RELEASE = no
+--------------------------------------------- docker --
+adrienaury/go-template                                 refactor              sha256:d05a1e1e5119aab03f3e3e33fa56d7db66ae5634beb53827b0e69fa168e3c595   Less than a second ago   20.6MB
+adrienaury/go-template-webserver                       refactor              sha256:14b333b3679a64b3255e7c88e7211fa4b7502e2664e7b482373b392d5615414c   1 second ago    20.6MB
+OK
+```
+
+To configure the docker target, edit the `build.yml` file and look for the property named `dockerfiles`. It'a map with Dockerfiles paths as keys and context paths as values. The default value is `{"Dockerfile": ".", "Dockerfile.webserver", "."}` which will build both Dockerfiles present at the root of this template with a build context equal to the current directory (root directory).
+
+The `dockerfiles` map can also be passed by the `neon -props` flag.
+
+```console
+$ neon -props '{dockerfiles: {"Dockerfile": "."}}' docker
+----------------------------------------------- info --
+MODULE  = github.com/adrienaury/go-template
+PROJECT = go-template
+TAG     = refactor
+COMMIT  = 9791b0c79b55f2f34517d7e6b64d4900c8c7f2ce
+DATE    = 2021-05-02
+BY      = adrienaury@gmail.com
+RELEASE = no
+--------------------------------------------- docker --
+adrienaury/go-template                                 refactor              sha256:d05a1e1e5119aab03f3e3e33fa56d7db66ae5634beb53827b0e69fa168e3c595   7 minutes ago   20.6MB
+OK
+```
 
 ## Contributing
 

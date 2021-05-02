@@ -54,7 +54,7 @@ targets:
       - print: "docker      Build docker images [will trigger: info]"
       - print: "docker-tag  Tag docker images [will trigger: info->docker]"
       ## Continuous Deployment
-      - print: "publish     Publish tagged binary cmd's to Github [will trigger: info->refresh->lint->test]"
+      - print: "publish     Publish tagged binary to Github [will trigger: info->refresh->lint->test]"
       - print: ""
       - print: 'Example : neon -props "{latest: true}" promote publish'
 
@@ -140,6 +140,8 @@ targets:
       - $: "go mod init ={mod}"
       - $: "go mod tidy"
 
+  # run "neon -props '{buildpaths: ["path/to/main/package1","path/to/main/package2"]}' compile" to compile specific targets
+  # example : neon -props '{buildpaths: ["cmd/cli"]}' compile
   compile:
     doc: "compile binary files locally"
     depends: ["info", "refresh"]
@@ -175,6 +177,8 @@ targets:
     steps:
       - $: go test -coverprofile=./={BUILD_DIR}/coverage.txt -covermode=atomic ./...
 
+  # run "neon -props '{buildpaths: ["path/to/main/package1","path/to/main/package2"]}' release" to release specific targets
+  # example : neon -props '{buildpaths: ["cmd/cli"]}' release
   release:
     doc: "compile binary files for production"
     depends: ["info", "refresh", lint, "test"]
@@ -182,17 +186,24 @@ targets:
       - ldflags = ldflags + " -s -w" # Omit the DWARF symbol table. Omit the symbol table and debug information.
       - call: compile
 
+  # run "neon -props '{buildpaths: ["path/to/main/package1","path/to/main/package2"]}' publish" to publish specific targets
+  # example : neon -props '{buildpaths: ["cmd/cli"]}' publish
   publish:
-    doc: "publish tagged binary cmd's to Github"
+    doc: "publish tagged binaries to Github"
     depends: ["info", "refresh", lint, "test"]
     steps:
+      - if: len(buildpaths) == 0
+        then:
+          - buildpaths = appendpath("cmd", find("cmd", "*"))
       - ldflags = ldflags + " -s -w" # Omit the DWARF symbol table. Omit the symbol table and debug information.
       - ldflags = ldflags + " -X main.version=" + tag + " -X main.commit=" + commit + " -X main.buildDate=" + date + " -X main.builtBy=" + by
-      - $: (export LDFLAGS="={ldflags}"; cat .goreleaser.template.yml | gomplate)
+      - $: (export LDFLAGS="={ldflags}"; export BUILDPATHS="={buildpaths}"; cat .goreleaser.template.yml | gomplate)
         1>: ={BUILD_DIR}/.goreleaser.yml
         1x: true
       - $: goreleaser release -f ={BUILD_DIR}/.goreleaser.yml --rm-dist --snapshot # TODO : remove --rm-dist --snapshot
 
+  # run "neon -props '{dockerfiles: {"path/to/Dockerfile1": "path/to/root/build/context"}}' docker" to build specific Dockerfiles
+  # example : neon -props '{dockerfiles: {"Dockerfile": "."}}' docker
   docker:
     doc: "build docker images"
     depends: ["info"]

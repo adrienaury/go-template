@@ -4,6 +4,12 @@
 
 SHELL := /bin/zsh # Use zsh syntax
 
+.PHONY: init
+init:
+	@touch ~/.dockerhub.yml
+	@chmod 0600 ~/.dockerhub.yml
+	@git config --local core.hooksPath githooks
+
 .PHONY: warning
 warning:
 	@echo "This project uses neon as a build tool, all of the make rules are mapped to the neon build in build.yml"

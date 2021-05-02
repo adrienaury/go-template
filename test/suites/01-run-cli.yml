@@ -1,0 +1,9 @@
+# Venom Test Suite definition
+# Check Venom documentation for more information : https://github.com/ovh/venom
+name: run cli
+testcases:
+  - name: no arguments
+    steps:
+      - script: webserver
+        assertions:
+          - result.systemout ShouldContainSubstring Hello World!

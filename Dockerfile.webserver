@@ -1,5 +1,5 @@
 FROM gcr.io/distroless/base
 ARG BIN
-COPY /bin/${BIN} /entrypoint
+COPY /bin/webserver /webserver
 EXPOSE 8080
-CMD ["/entrypoint"]
+CMD ["/webserver"]

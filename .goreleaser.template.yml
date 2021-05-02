@@ -5,15 +5,14 @@ before:
     - go mod download
 dist: bin/dist
 builds:
-{{range (file.ReadDir "cmd")}}
+{{range (getenv "BUILDPATHS" | jsonArray)}}
   - id: "{{.}}"
-    binary: "{{.}}"
-    main: "./cmd/{{.}}"
+    binary: "{{ path.Base . }}"
+    main: "./{{.}}"
     goos:
       - darwin
       - linux
       - windows
     ldflags:
-      - -s -w -X main.name={{.}} -X main.version={{env.Getenv "VERSION"}} -X main.commit={{env.Getenv "COMMIT_HASH"}} -X main.builtBy=goreleaser
-      - -X main.buildDate={{env.Getenv "BUILD_DATE"}}
+      - -s -w -X main.name={{ path.Base . }} {{env.Getenv "LDFLAGS"}}
 {{end}}

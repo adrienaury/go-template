@@ -20,7 +20,7 @@ When you [create a new repository on Github](https://github.com/new), you can se
 
 ```console
 $ cd </your/project/root>
-/your/project/root$ wget -nv -O- https://github.com/adrienaury/go-devcontainer//your/project/root$ archive/refs/heads/main.tar.gz | tar --strip-components=1 -xz
+/your/project/root$ wget -nv -O- https://github.com/adrienaury/go-devcontainer/archive/refs/heads/main.tar.gz | tar --strip-components=1 -xz
 /your/project/root$ git init -b main
 /your/project/root$ git add .
 /your/project/root$ git commit -m "chore: init repository from go template"

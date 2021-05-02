@@ -55,7 +55,7 @@ targets:
       - print: "test            Run all tests with coverage [will trigger: info->refresh->lint]"
       - print: "release         Compile binary files for production [will trigger: info->refresh->lint->test]"
       - print: "test-int        Run all integration tests [will trigger: info->refresh->lint->test->release]"
-      - print: "publish         Publish tagged binary to Github [will trigger: info->refresh->lint->test]"
+      - print: "publish         Publish tagged binary to Github [will trigger: info->refresh->lint->test->release->test-int]"
       - print: "docker          Build docker images [will trigger: info]"
       - print: "docker-tag      Tag docker images [will trigger: info->docker]"
       - print: "docker-publish  Publish docker images to Dockerhub [will trigger: info->docker->docker-tag]"

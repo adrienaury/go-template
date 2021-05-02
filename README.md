@@ -234,7 +234,7 @@ Building internal/helloservice
 OK
 ```
 
-### Lint
+#### Lint
 
 Examine source code and report suspicious constructs. Under the hood, the [`golangci-lint`](https://github.com/golangci/golangci-lint) tool is used.
 
@@ -260,7 +260,7 @@ OK
 By default, all fast linters are enabled (`--fast` and `--enable-all` flags on `golangci-lint`) but you can change this with the following build properties :
 
 - linters : an array of linters to enable, if left empty then all fast linters are enabled.
-- lintersno : an array of linters to disable, by default `scopelint` (deprecated) and `forbidigo` ar disabled.
+- lintersno : an array of linters to disable, by default `scopelint` (deprecated) and `forbidigo` are disabled.
 
 To change the default values, edit the `build.yml` file and look for the properties names `linters` or `lintersno`.
 
@@ -284,6 +284,71 @@ go: to add module requirements and sums:
 Running command: golangci-lint run --enable deadcode --disable scopelint --disable forbidigo
 OK
 ```
+
+#### Test
+
+Run all tests with coverage.
+
+```console
+$ neon test
+----------------------------------------------- info --
+MODULE  = github.com/adrienaury/go-template
+PROJECT = go-template
+TAG     = refactor
+COMMIT  = 6ac8d1ab1facb9969a84b330d08e0f3efac55819
+DATE    = 2021-05-02
+BY      = adrienaury@gmail.com
+RELEASE = no
+--------------------------------------------- refresh --
+go: creating new go.mod: module github.com/adrienaury/go-template
+go: to add module requirements and sums:
+        go mod tidy
+------------------------------------------------ lint --
+Running command: golangci-lint run --fast --enable-all --disable scopelint --disable forbidigo
+------------------------------------------------ test --
+?       github.com/adrienaury/go-template/cmd/cli       [no test files]
+?       github.com/adrienaury/go-template/cmd/webserver [no test files]
+?       github.com/adrienaury/go-template/internal/helloservice [no test files]
+?       github.com/adrienaury/go-template/pkg/nameservice       [no test files]
+OK
+```
+
+#### Release
+
+Compile binary files for production.
+
+The only difference with the [`compile`](#compile) target is with the `ldflags` passed to the Go linker (it will produce a smaller binary) and the dependency to other targets (`lint` and `test`).
+
+```console
+$ neon release
+----------------------------------------------- info --
+MODULE  = github.com/adrienaury/go-template
+PROJECT = go-template
+TAG     = refactor
+COMMIT  = b0b418aa05db7f386275249ea641f14b295cf3ab
+DATE    = 2021-05-02
+BY      = adrienaury@gmail.com
+RELEASE = no
+--------------------------------------------- refresh --
+go: creating new go.mod: module github.com/adrienaury/go-template
+go: to add module requirements and sums:
+        go mod tidy
+------------------------------------------------ lint --
+Running command: golangci-lint run --fast --enable-all --disable scopelint --disable forbidigo
+------------------------------------------------ test --
+?       github.com/adrienaury/go-template/cmd/cli       [no test files]
+?       github.com/adrienaury/go-template/cmd/webserver [no test files]
+?       github.com/adrienaury/go-template/internal/helloservice [no test files]
+?       github.com/adrienaury/go-template/pkg/nameservice       [no test files]
+--------------------------------------------- release --
+Calling target 'compile'
+--------------------------------------------- compile --
+Building cmd/cli
+Building cmd/webserver
+OK
+```
+
+The build properties are the same as the [`compile`](#compile) target.
 
 ## Contributing
 

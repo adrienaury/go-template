@@ -86,10 +86,9 @@ This text bloc show how target are related to each other. E.g. running the targe
 ```text
 → help
 → promote
-→ info ┰─ docker ── docker-tag
+→ info ┰─ docker ── docker-tag ── docker-publish
        ┖─ refresh ┰─ compile
-                  ┖─ lint ─ test ┰ release ─ test-int
-                                 ┖─publish
+                  ┖─ lint ─ test ─ release ─ test-int ─ publish
 ```
 
 Neon targets are also mapped to a Makefile, so running `make compile` will produce the same result as running `neon compile`.
@@ -119,10 +118,9 @@ Example : neon -props "{latest: true}" promote publish
 Target dependencies
 → help
 → promote
-→ info ┰─ docker ── docker-tag
+→ info ┰─ docker ── docker-tag ── docker-publish
        ┖─ refresh ┰─ compile
-                  ┖─ lint ─ test ┰ release ─ test-int
-                                 ┖─publish
+                  ┖─ lint ─ test ─ release ─ test-int ─ publish
 
 OK
 ```
@@ -421,6 +419,16 @@ Running command: golangci-lint run --fast --enable-all --disable scopelint --dis
 ?       github.com/adrienaury/go-template/cmd/webserver [no test files]
 ?       github.com/adrienaury/go-template/internal/helloservice [no test files]
 ?       github.com/adrienaury/go-template/pkg/nameservice       [no test files]
+--------------------------------------------- release --
+Calling target 'compile'
+--------------------------------------------- compile --
+Building cmd/cli
+Building cmd/webserver
+-------------------------------------------- test-int --
+ • run cli (test/suites/01-run-cli.yml)
+        • no-arguments SUCCESS
+ • run webserver (test/suites/02-run-webserver.yml)
+        • no-arguments SUCCESS
 --------------------------------------------- publish --
 
    • releasing...

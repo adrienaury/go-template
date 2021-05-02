@@ -16,8 +16,8 @@ Types of changes
 
 ## [Unreleased]
 
-Nothing in the backlog !
+- `Changed` Publish target now depends from the `test-int` target
 
 ## [0.1.0]
 
-- `Added` Short description of added feature. TODO: edit this!
+- `Added` First official version of the template.

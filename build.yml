@@ -40,7 +40,7 @@ properties:
 
 targets:
   help:
-    doc: "print this message"
+    doc: "Print this message"
     steps:
       # - $: 'neon -info' => incorrect order, issue to open
       - color: "cyan"
@@ -71,7 +71,7 @@ targets:
                             ┖─ lint ─ test ─ release ─ test-int ─ publish
 
   info:
-    doc: "print build informations"
+    doc: "Print build informations"
     steps:
       - $: "git describe --tags --exact-match 2>/dev/null || git symbolic-ref -q --short HEAD"
         1=: "tag"
@@ -138,7 +138,7 @@ targets:
               VERSION = ={version_major}.={version_minor}.={version_patch}
 
   promote:
-    doc: "promote the project with a new tag based on git log history"
+    doc: "Promote the project with a new tag based on git log history"
     steps:
       - try:
           - $: "# ={tag}"
@@ -151,7 +151,7 @@ targets:
       - $: "echo Promoted to ={tag}"
 
   refresh:
-    doc: "refresh go modules (add missing and remove unused modules)"
+    doc: "Refresh go modules (add missing and remove unused modules)"
     depends: "info"
     steps:
       - $: "rm -f go.mod go.sum"
@@ -161,7 +161,7 @@ targets:
   # run "neon -props '{buildpaths: ["path/to/main/package1","path/to/main/package2"]}' compile" to compile specific targets
   # example : neon -props '{buildpaths: ["cmd/cli"]}' compile
   compile:
-    doc: "compile binary files locally"
+    doc: "Compile binary files locally"
     depends: ["info", "refresh"]
     steps:
       - ldflags = ldflags + " -X main.version=" + tag + " -X main.commit=" + commit + " -X main.buildDate=" + date + " -X main.builtBy=" + by
@@ -178,7 +178,7 @@ targets:
           - $: go build -ldflags "-X main.name=={name} ={ldflags} ={LDFLAGS}" -o ./={BUILD_DIR}/={name} ./={path}
 
   lint:
-    doc: "examine source code and report suspicious constructs"
+    doc: "Examine source code and report suspicious constructs"
     depends: ["info", "refresh"]
     steps:
       - if: len(linters) == 0
@@ -190,7 +190,7 @@ targets:
             :: true
 
   test:
-    doc: "run all tests with coverage"
+    doc: "Run all tests with coverage"
     depends: ["info", "refresh", "lint"]
     steps:
       - $: go test -coverprofile=./={BUILD_DIR}/coverage.txt -covermode=atomic ./...
@@ -198,14 +198,14 @@ targets:
   # run "neon -props '{buildpaths: ["path/to/main/package1","path/to/main/package2"]}' release" to release specific targets
   # example : neon -props '{buildpaths: ["cmd/cli"]}' release
   release:
-    doc: "compile binary files for production"
-    depends: ["info", "refresh", lint, "test"]
+    doc: "Compile binary files for production"
+    depends: ["info", "refresh", "lint", "test"]
     steps:
       - ldflags = ldflags + " -s -w" # Omit the DWARF symbol table. Omit the symbol table and debug information.
       - call: compile
 
   test-int:
-    doc: "run all integration tests"
+    doc: "Run all integration tests"
     depends: ["info", "refresh", "lint", "test", "release"]
     steps:
       - $: venom run test/suites/*
@@ -213,8 +213,8 @@ targets:
   # run "neon -props '{buildpaths: ["path/to/main/package1","path/to/main/package2"]}' publish" to publish specific targets
   # example : neon -props '{buildpaths: ["cmd/cli"]}' publish
   publish:
-    doc: "publish tagged binaries to Github"
-    depends: ["info", "refresh", lint, "test"]
+    doc: "Publish tagged binaries to Github"
+    depends: ["info", "refresh", "lint", "test", "release", "test-int"]
     steps:
       - if: len(buildpaths) == 0
         then:
@@ -229,7 +229,7 @@ targets:
   # run "neon -props '{dockerfiles: {"path/to/Dockerfile1": "path/to/root/build/context"}}' docker" to build specific Dockerfiles
   # example : neon -props '{dockerfiles: {"Dockerfile": "."}}' docker
   docker:
-    doc: "build docker images"
+    doc: "Build docker images"
     depends: ["info"]
     steps:
       - try:
@@ -257,7 +257,7 @@ targets:
 
   # run "neon -props '{latest: true}' docker-tag" to include latest tag
   docker-tag:
-    doc: "tag docker images"
+    doc: "Tag docker images"
     # unless: 'is_release != "yes"' => is_release unknown variable, issue to open
     depends: ["info", "docker"]
     steps:
@@ -307,7 +307,7 @@ targets:
 
   # run "neon -props '{latest: true}' docker-publish" to include latest tag
   docker-publish:
-    doc: "push docker images to Dockerhub"
+    doc: "Push docker images to Dockerhub"
     # unless: 'is_release != "yes"' => is_release unknown variable, issue to open
     depends: ["docker", "docker-tag", "docker-login"]
     steps:

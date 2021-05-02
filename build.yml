@@ -197,6 +197,16 @@ targets:
     doc: "build docker images"
     depends: ["info"]
     steps:
+      - try:
+          - $: "# ={DOCKERHUB_USER}"
+            3x: true
+        catch:
+          - print: |
+              To use this target, make sure your DOCKERHUB_USER is set in the file ~/.dockerhub.yml
+              The content of the file should be :
+                DOCKERHUB_USER: <your dockerhub user>
+                DOCKERHUB_PASS: <your dockerhub password or a dockerhub token>
+          - $: return 1
       - for: key
         in: keys(dockerfiles)
         do:
@@ -218,6 +228,16 @@ targets:
     steps:
       - if: 'is_release == "yes"'
         then:
+          - try:
+              - $: "# ={DOCKERHUB_PASS}"
+                3x: true
+            catch:
+              - print: |
+                  To use this target, make sure your credentials are set in the file ~/.dockerhub.yml
+                  The content of the file should be :
+                    DOCKERHUB_USER: <your dockerhub user>
+                    DOCKERHUB_PASS: <your dockerhub password or a dockerhub token>
+              - $: return 1
           - for: key
             in: keys(dockerfiles)
             do:

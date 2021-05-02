@@ -12,6 +12,15 @@ List of folders
 
 ## Usage
 
+### Prerequisites
+
+You need :
+
+- Visual Studio Code ([download](https://code.visualstudio.com/)) with the [Remote - Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) installed.
+- Docker Desktop (Windows, macOS) or Docker CE/EE (Linux)
+
+Details are available on [the official Visual Studio documentation](https://code.visualstudio.com/docs/remote/containers#_getting-started).
+
 ### Initialize a new repository using Github
 
 When you [create a new repository on Github](https://github.com/new), you can select this project in the `Repository template` field. It will automatically initialize your new repository with this template.
@@ -34,6 +43,12 @@ Warning: do this in a branch where to isolate the changes
 $ cd </your/project/root>
 /your/project/root$ wget -nv -O- https://github.com/adrienaury/go-devcontainer/archive/refs/heads/main.tar.gz | tar --strip-components=1 -xz
 ```
+
+### Run your workspace
+
+When opening the folder with [Visual Studio Code](https://code.visualstudio.com/), the [Remote - Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) will detect the devcontainer configuration and ask you to reopen the project in a container.
+
+Accept and enjoy !
 
 ## Features
 

@@ -91,6 +91,8 @@ This text bloc show how target are related to each other. E.g. running the targe
                   ┖─ lint ─ test ─ release ─ test-int ─ publish
 ```
 
+Multiple targets can be run in the same command, e.g. `neon release docker-tag`.
+
 Neon targets are also mapped to a Makefile, so running `make compile` will produce the same result as running `neon compile`.
 
 #### Help

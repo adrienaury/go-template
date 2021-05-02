@@ -1,0 +1,7 @@
+name: run cli
+testcases:
+  - name: no arguments
+    steps:
+      - script: webserver
+        assertions:
+          - result.systemout ShouldContainSubstring Hello World!

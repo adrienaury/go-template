@@ -51,6 +51,7 @@ targets:
       - print: "lint        Examine source code and report suspicious constructs [will trigger: info->refresh]"
       - print: "test        Run all tests with coverage [will trigger: info->refresh->lint]"
       - print: "release     Compile binary files for production [will trigger: info->refresh->lint->test]"
+      - print: "test-int    Run all integration tests [will trigger: info->refresh->lint->test->release]"
       - print: "docker      Build docker images [will trigger: info]"
       - print: "docker-tag  Tag docker images [will trigger: info->docker]"
       ## Continuous Deployment
@@ -185,6 +186,12 @@ targets:
     steps:
       - ldflags = ldflags + " -s -w" # Omit the DWARF symbol table. Omit the symbol table and debug information.
       - call: compile
+
+  test-int:
+    doc: "run all integration tests"
+    depends: ["info", "refresh", "lint", "test", "release"]
+    steps:
+      - $: venom run test/suites/*
 
   # run "neon -props '{buildpaths: ["path/to/main/package1","path/to/main/package2"]}' publish" to publish specific targets
   # example : neon -props '{buildpaths: ["cmd/cli"]}' publish

@@ -8,6 +8,8 @@ SHELL := /bin/zsh # Use zsh syntax
 init:
 	@touch ~/.dockerhub.yml
 	@chmod 0600 ~/.dockerhub.yml
+	@touch ~/.github.yml
+	@chmod 0600 ~/.github.yml
 	@git config --local core.hooksPath githooks
 
 .PHONY: warning

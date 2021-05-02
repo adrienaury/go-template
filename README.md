@@ -396,6 +396,8 @@ OK
 
 Publish tagged binary to Github (as a Release). Under the hood, the [`goreleaser`](https://github.com/goreleaser/goreleaser) tool is used.
 
+Edit the file `./goreleaser.template.yml` to configure the [`goreleaser`](https://github.com/goreleaser/goreleaser) build.
+
 A prerequisite to this target is that a file named `.github.yml` at the home directory (`~/.github.yml`) contains a `GITHUB_TOKEN` property.
 
 ```console
@@ -600,13 +602,45 @@ adrienaury/go-template-webserver                       v0.2.0                sha
 OK
 ```
 
+Use `-props '{latest: true}'` to include the latest tag.
+
+```console
+$ neon -props '{latest: true}' docker-tag
+----------------------------------------------- info --
+MODULE  = github.com/adrienaury/go-template
+PROJECT = go-template
+TAG     = v0.2.0
+COMMIT  = 00a4bdbf147a4394aa1e7f0483802f94658e9ce3
+DATE    = 2021-05-02
+BY      = adrienaury@gmail.com
+RELEASE = yes
+VERSION = 0.2.0
+--------------------------------------------- docker --
+adrienaury/go-template                                 refactor              sha256:d05a1e1e5119aab03f3e3e33fa56d7db66ae5634beb53827b0e69fa168e3c595   20 minutes ago   20.6MB
+adrienaury/go-template                                 v0.2.0                sha256:d05a1e1e5119aab03f3e3e33fa56d7db66ae5634beb53827b0e69fa168e3c595   20 minutes ago   20.6MB
+adrienaury/go-template-webserver                       refactor              sha256:14b333b3679a64b3255e7c88e7211fa4b7502e2664e7b482373b392d5615414c   20 minutes ago   20.6MB
+adrienaury/go-template-webserver                       v0.2.0                sha256:14b333b3679a64b3255e7c88e7211fa4b7502e2664e7b482373b392d5615414c   20 minutes ago   20.6MB
+----------------------------------------- docker-tag --
+adrienaury/go-template                                 latest                sha256:d05a1e1e5119aab03f3e3e33fa56d7db66ae5634beb53827b0e69fa168e3c595   20 minutes ago   20.6MB
+adrienaury/go-template                                 refactor              sha256:d05a1e1e5119aab03f3e3e33fa56d7db66ae5634beb53827b0e69fa168e3c595   20 minutes ago   20.6MB
+adrienaury/go-template                                 v0                    sha256:d05a1e1e5119aab03f3e3e33fa56d7db66ae5634beb53827b0e69fa168e3c595   20 minutes ago   20.6MB
+adrienaury/go-template                                 v0.2                  sha256:d05a1e1e5119aab03f3e3e33fa56d7db66ae5634beb53827b0e69fa168e3c595   20 minutes ago   20.6MB
+adrienaury/go-template                                 v0.2.0                sha256:d05a1e1e5119aab03f3e3e33fa56d7db66ae5634beb53827b0e69fa168e3c595   20 minutes ago   20.6MB
+adrienaury/go-template-webserver                       latest                sha256:14b333b3679a64b3255e7c88e7211fa4b7502e2664e7b482373b392d5615414c   20 minutes ago   20.6MB
+adrienaury/go-template-webserver                       refactor              sha256:14b333b3679a64b3255e7c88e7211fa4b7502e2664e7b482373b392d5615414c   20 minutes ago   20.6MB
+adrienaury/go-template-webserver                       v0                    sha256:14b333b3679a64b3255e7c88e7211fa4b7502e2664e7b482373b392d5615414c   20 minutes ago   20.6MB
+adrienaury/go-template-webserver                       v0.2                  sha256:14b333b3679a64b3255e7c88e7211fa4b7502e2664e7b482373b392d5615414c   20 minutes ago   20.6MB
+adrienaury/go-template-webserver                       v0.2.0                sha256:14b333b3679a64b3255e7c88e7211fa4b7502e2664e7b482373b392d5615414c   20 minutes ago   20.6MB
+OK
+```
+
 #### Docker-publish
 
 Publish tagged docker images to Dockerhub.
 
 A prerequisite to this target is that a file named `.dockerhub.yml` at the home directory (`~/.dockerhub.yml`) contains a `DOCKERHUB_USER` property and a `DOCKERHUB_PASS` property.
 
-The build properties are the same as the [`docker`](#docker) target (a `dockerfiles` map).
+The build properties are the same as the [`docker`](#docker) target and the [`docker-tag`](#docker-tag) target combined (a `dockerfiles` map and the `latest` boolean).
 
 ## Contributing
 

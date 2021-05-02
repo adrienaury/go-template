@@ -44,8 +44,8 @@ targets:
       - print: "help        Print this message"
       - print: "info        Print build informations"
       ## Stand-alone targets
+      - print: "promote     Promote the project with a new tag based on git log history"
       - print: "refresh     Refresh go modules (add missing and remove unused modules) [will trigger: info]"
-      - print: "promote     Promote the project with a new tag based on git log history [will trigger: info]"
       - print: "compile     Compile binary files locally [will trigger: info->refresh]"
       ## Continuous Integration
       - print: "lint        Examine source code and report suspicious constructs [will trigger: info->refresh]"

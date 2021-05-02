@@ -392,9 +392,142 @@ Building cmd/webserver
 OK
 ```
 
+#### Publish
+
+Publish tagged binary to Github (as a Release). Under the hood, the [`goreleaser`](https://github.com/goreleaser/goreleaser) tool is used.
+
+A prerequisite to this target is that a file named `.github.yml` at the home directory (`~/.github.yml`) contains a `GITHUB_TOKEN` property.
+
+```console
+neon publish
+----------------------------------------------- info --
+MODULE  = github.com/adrienaury/go-template
+PROJECT = go-template
+TAG     = refactor
+COMMIT  = 00a4bdbf147a4394aa1e7f0483802f94658e9ce3
+DATE    = 2021-05-02
+BY      = adrienaury@gmail.com
+RELEASE = no
+--------------------------------------------- refresh --
+go: creating new go.mod: module github.com/adrienaury/go-template
+go: to add module requirements and sums:
+        go mod tidy
+------------------------------------------------ lint --
+Running command: golangci-lint run --fast --enable-all --disable scopelint --disable forbidigo
+------------------------------------------------ test --
+?       github.com/adrienaury/go-template/cmd/cli       [no test files]
+?       github.com/adrienaury/go-template/cmd/webserver [no test files]
+?       github.com/adrienaury/go-template/internal/helloservice [no test files]
+?       github.com/adrienaury/go-template/pkg/nameservice       [no test files]
+--------------------------------------------- publish --
+
+   • releasing...
+   • loading config file       file=bin/.goreleaser.yml
+   • loading environment variables
+   • getting and validating git state
+      • releasing v0.1.0, commit 00a4bdbf147a4394aa1e7f0483802f94658e9ce3
+      • pipe skipped              error=disabled during snapshot mode
+   • parsing tag
+   • running before hooks
+      • running go mod download
+   • setting defaults
+      • snapshotting
+      • github/gitlab/gitea releases
+      • project name
+      • loading go mod information
+      • building binaries
+      • creating source archive
+      • archives
+      • linux packages
+      • snapcraft packages
+      • calculating checksums
+      • signing artifacts
+      • docker images
+      • artifactory
+      • blobs
+      • homebrew tap formula
+      • scoop manifests
+      • milestones
+   • snapshotting
+   • checking ./dist
+      • --rm-dist is set, cleaning it up
+   • loading go mod information
+   • writing effective config file
+      • writing                   config=bin/dist/config.yaml
+   • generating changelog
+      • pipe skipped              error=not available for snapshots
+   • building binaries
+      • building                  binary=/workspaces/go-template/bin/dist/cmd/cli_windows_386/cli.exe
+      • building                  binary=/workspaces/go-template/bin/dist/cmd/cli_darwin_arm64/cli
+      • building                  binary=/workspaces/go-template/bin/dist/cmd/cli_linux_arm64/cli
+      • building                  binary=/workspaces/go-template/bin/dist/cmd/cli_linux_386/cli
+      • building                  binary=/workspaces/go-template/bin/dist/cmd/cli_windows_amd64/cli.exe
+      • building                  binary=/workspaces/go-template/bin/dist/cmd/cli_darwin_amd64/cli
+      • building                  binary=/workspaces/go-template/bin/dist/cmd/cli_linux_amd64/cli
+      • building                  binary=/workspaces/go-template/bin/dist/cmd/webserver_windows_386/webserver.exe
+      • building                  binary=/workspaces/go-template/bin/dist/cmd/webserver_linux_amd64/webserver
+      • building                  binary=/workspaces/go-template/bin/dist/cmd/webserver_linux_386/webserver
+      • building                  binary=/workspaces/go-template/bin/dist/cmd/webserver_windows_amd64/webserver.exe
+      • building                  binary=/workspaces/go-template/bin/dist/cmd/webserver_darwin_amd64/webserver
+      • building                  binary=/workspaces/go-template/bin/dist/cmd/webserver_darwin_arm64/webserver
+      • building                  binary=/workspaces/go-template/bin/dist/cmd/webserver_linux_arm64/webserver
+   • archives
+      • creating                  archive=bin/dist/go-template_v0.1.0-SNAPSHOT-00a4bdb_windows_386.tar.gz
+      • creating                  archive=bin/dist/go-template_v0.1.0-SNAPSHOT-00a4bdb_linux_386.tar.gz
+      • creating                  archive=bin/dist/go-template_v0.1.0-SNAPSHOT-00a4bdb_darwin_arm64.tar.gz
+      • creating                  archive=bin/dist/go-template_v0.1.0-SNAPSHOT-00a4bdb_windows_amd64.tar.gz
+      • creating                  archive=bin/dist/go-template_v0.1.0-SNAPSHOT-00a4bdb_linux_amd64.tar.gz
+      • creating                  archive=bin/dist/go-template_v0.1.0-SNAPSHOT-00a4bdb_linux_arm64.tar.gz
+      • creating                  archive=bin/dist/go-template_v0.1.0-SNAPSHOT-00a4bdb_darwin_amd64.tar.gz
+   • creating source archive
+   • linux packages
+   • snapcraft packages
+   • calculating checksums
+      • checksumming              file=go-template_v0.1.0-SNAPSHOT-00a4bdb_windows_amd64.tar.gz
+      • checksumming              file=go-template_v0.1.0-SNAPSHOT-00a4bdb_darwin_arm64.tar.gz
+      • checksumming              file=go-template_v0.1.0-SNAPSHOT-00a4bdb_linux_amd64.tar.gz
+      • checksumming              file=go-template_v0.1.0-SNAPSHOT-00a4bdb_darwin_amd64.tar.gz
+      • checksumming              file=go-template_v0.1.0-SNAPSHOT-00a4bdb_linux_arm64.tar.gz
+      • checksumming              file=go-template_v0.1.0-SNAPSHOT-00a4bdb_windows_386.tar.gz
+      • checksumming              file=go-template_v0.1.0-SNAPSHOT-00a4bdb_linux_386.tar.gz
+   • signing artifacts
+   • docker images
+   • publishing
+      • blobs
+      • http upload
+      • custom publisher
+      • artifactory
+      • docker images
+         • pipe skipped              error=publishing is disabled
+      • docker manifests
+         • pipe skipped              error=publishing is disabled
+      • snapcraft packages
+         • pipe skipped              error=publishing is disabled
+      • github/gitlab/gitea releases
+         • pipe skipped              error=publishing is disabled
+      • homebrew tap formula
+      • scoop manifests
+         • pipe skipped              error=publishing is disabled
+      • milestones
+         • pipe skipped              error=publishing is disabled
+   • release succeeded after 1.39s
+OK
+```
+
+The build properties are the same as the [`compile`](#compile) target.
+
 #### Docker
 
 Build docker images locally.
+
+Dockerfiles and build contexts are configured by the `dockerfiles` map. It'a map with Dockerfiles paths as keys and context paths as values. The default value is `{"Dockerfile": ".", "Dockerfile.webserver", "."}` which will build both Dockerfiles present at the root of this template with a build context equal to the current directory (root directory).
+
+The images are named according to a few rules :
+
+- if the source Dockerfile has an extension (e.g. `Dockerfile.webserver`) then the image built will be named `<DOCKERHUB_USER>/<PROJECT>-<EXTENSION>` (e.g. : `Dockerfile.webserver` will produce an image named `<DOCKERHUB_USER>/<PROJECT>-webserver`)
+- if the source Dockerfile hasn't an extension (e.g. `Dockerfile`) then the image built will be named `<DOCKERHUB_USER>/<PROJECT>`
+
+A prerequisite to this target is that a file named `.dockerhub.yml` at the home directory (`~/.dockerhub.yml`) contains a `DOCKERHUB_USER` property.
 
 ```console
 neon docker
@@ -412,7 +545,7 @@ adrienaury/go-template-webserver                       refactor              sha
 OK
 ```
 
-To configure the docker target, edit the `build.yml` file and look for the property named `dockerfiles`. It'a map with Dockerfiles paths as keys and context paths as values. The default value is `{"Dockerfile": ".", "Dockerfile.webserver", "."}` which will build both Dockerfiles present at the root of this template with a build context equal to the current directory (root directory).
+To configure the docker target, edit the `build.yml` file and look for the property named `dockerfiles`.
 
 The `dockerfiles` map can also be passed by the `neon -props` flag.
 
@@ -430,6 +563,50 @@ RELEASE = no
 adrienaury/go-template                                 refactor              sha256:d05a1e1e5119aab03f3e3e33fa56d7db66ae5634beb53827b0e69fa168e3c595   7 minutes ago   20.6MB
 OK
 ```
+
+#### Docker-tag
+
+Tag docker images. This target will run only if the tag being built is a release tag (vX.Y.Z).
+
+It will tag all docker images with [semantic docker tags](https://medium.com/@mccode/using-semantic-versioning-for-docker-image-tags-dfde8be06699).
+
+The build properties are the same as the [`docker`](#docker) target (a `dockerfiles` map).
+
+```console
+$ neon docker-tag
+----------------------------------------------- info --
+MODULE  = github.com/adrienaury/go-template
+PROJECT = go-template
+TAG     = v0.2.0
+COMMIT  = 00a4bdbf147a4394aa1e7f0483802f94658e9ce3
+DATE    = 2021-05-02
+BY      = adrienaury@gmail.com
+RELEASE = yes
+VERSION = 0.2.0
+--------------------------------------------- docker --
+adrienaury/go-template                                 refactor              sha256:d05a1e1e5119aab03f3e3e33fa56d7db66ae5634beb53827b0e69fa168e3c595   20 minutes ago   20.6MB
+adrienaury/go-template                                 v0.2.0                sha256:d05a1e1e5119aab03f3e3e33fa56d7db66ae5634beb53827b0e69fa168e3c595   20 minutes ago   20.6MB
+adrienaury/go-template-webserver                       refactor              sha256:14b333b3679a64b3255e7c88e7211fa4b7502e2664e7b482373b392d5615414c   20 minutes ago   20.6MB
+adrienaury/go-template-webserver                       v0.2.0                sha256:14b333b3679a64b3255e7c88e7211fa4b7502e2664e7b482373b392d5615414c   20 minutes ago   20.6MB
+----------------------------------------- docker-tag --
+adrienaury/go-template                                 refactor              sha256:d05a1e1e5119aab03f3e3e33fa56d7db66ae5634beb53827b0e69fa168e3c595   20 minutes ago   20.6MB
+adrienaury/go-template                                 v0                    sha256:d05a1e1e5119aab03f3e3e33fa56d7db66ae5634beb53827b0e69fa168e3c595   20 minutes ago   20.6MB
+adrienaury/go-template                                 v0.2                  sha256:d05a1e1e5119aab03f3e3e33fa56d7db66ae5634beb53827b0e69fa168e3c595   20 minutes ago   20.6MB
+adrienaury/go-template                                 v0.2.0                sha256:d05a1e1e5119aab03f3e3e33fa56d7db66ae5634beb53827b0e69fa168e3c595   20 minutes ago   20.6MB
+adrienaury/go-template-webserver                       refactor              sha256:14b333b3679a64b3255e7c88e7211fa4b7502e2664e7b482373b392d5615414c   20 minutes ago   20.6MB
+adrienaury/go-template-webserver                       v0                    sha256:14b333b3679a64b3255e7c88e7211fa4b7502e2664e7b482373b392d5615414c   20 minutes ago   20.6MB
+adrienaury/go-template-webserver                       v0.2                  sha256:14b333b3679a64b3255e7c88e7211fa4b7502e2664e7b482373b392d5615414c   20 minutes ago   20.6MB
+adrienaury/go-template-webserver                       v0.2.0                sha256:14b333b3679a64b3255e7c88e7211fa4b7502e2664e7b482373b392d5615414c   20 minutes ago   20.6MB
+OK
+```
+
+#### Docker-publish
+
+Publish tagged docker images to Dockerhub.
+
+A prerequisite to this target is that a file named `.dockerhub.yml` at the home directory (`~/.dockerhub.yml`) contains a `DOCKERHUB_USER` property and a `DOCKERHUB_PASS` property.
+
+The build properties are the same as the [`docker`](#docker) target (a `dockerfiles` map).
 
 ## Contributing
 

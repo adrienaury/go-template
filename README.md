@@ -96,6 +96,7 @@ This text bloc show how target are related to each other. E.g. running the targe
 
 ```console
 $ neon help
+----------------------------------------------- help --
 Available targets
 
 help        Print this message
@@ -130,7 +131,7 @@ Print build informations, like the author or the current tag.
 
 ```console
 $ neon info
------------------------------------------------- info --
+----------------------------------------------- info --
 MODULE  = github.com/adrienaury/go-template
 PROJECT = go-template
 TAG     = refactor
@@ -145,17 +146,142 @@ OK
 
 Promote the project with a new tag based on git log history, or based on the parameter passed with `-props` flag.
 
+Without parameter, the tag name will be determined by the git commit history since the last tag (or will be equal to `v0.1.0` if there is no existing tag). This is base on the [`svu`](https://github.com/caarlos0/svu) tool.
+
 ```console
 $ neon promote
------------------------------------------------- promote --
+--------------------------------------------- promote --
 Promoted to v0.2.0
 OK
 ```
 
+It's possible to use the `-props` flag to override the name of the tag.
+
 ```console
 $ neon -props '{tag: "v0.2.1-alpha"}' promote
------------------------------------------------- promote --
+--------------------------------------------- promote --
 Promoted to v0.2.1-alpha
+OK
+```
+
+#### Refresh
+
+Refresh go modules (add missing and remove unused modules).
+
+This target will keep your `go.mod` and `go.sum` files clean.
+
+```console
+$ neon refresh
+----------------------------------------------- info --
+MODULE  = github.com/adrienaury/go-template
+PROJECT = go-template
+TAG     = refactor
+COMMIT  = 00424c8c67bca5b11ed99efa0d45902f1143cbd7
+DATE    = 2021-05-02
+BY      = adrienaury@gmail.com
+RELEASE = no
+--------------------------------------------- refresh --
+go: creating new go.mod: module github.com/adrienaury/go-template
+go: to add module requirements and sums:
+        go mod tidy
+OK
+```
+
+#### Compile
+
+Compile binary files locally.
+
+By default, the `cmd` folder is scanned and each subfolder will create a binary with the name of the subfolder.
+
+```console
+$ neon compile
+----------------------------------------------- info --
+MODULE  = github.com/adrienaury/go-template
+PROJECT = go-template
+TAG     = refactor
+COMMIT  = b0b418aa05db7f386275249ea641f14b295cf3ab
+DATE    = 2021-05-02
+BY      = adrienaury@gmail.com
+RELEASE = no
+--------------------------------------------- refresh --
+go: creating new go.mod: module github.com/adrienaury/go-template
+go: to add module requirements and sums:
+        go mod tidy
+--------------------------------------------- compile --
+Building cmd/cli
+Building cmd/webserver
+OK
+```
+
+It's possible to use the `-props` flag to specify a list of folders to compile. Be aware that if one of these folders does not have a `main` package, the result file will not be executable.
+
+```console
+$ neon -props '{buildpaths: ["internal/helloservice"]}' compile
+----------------------------------------------- info --
+MODULE  = github.com/adrienaury/go-template
+PROJECT = go-template
+TAG     = refactor
+COMMIT  = b0b418aa05db7f386275249ea641f14b295cf3ab
+DATE    = 2021-05-02
+BY      = adrienaury@gmail.com
+RELEASE = no
+--------------------------------------------- refresh --
+go: creating new go.mod: module github.com/adrienaury/go-template
+go: to add module requirements and sums:
+        go mod tidy
+--------------------------------------------- compile --
+Building internal/helloservice
+OK
+```
+
+### Lint
+
+Examine source code and report suspicious constructs. Under the hood, the [`golangci-lint`](https://github.com/golangci/golangci-lint) tool is used.
+
+```console
+$ neon lint
+----------------------------------------------- info --
+MODULE  = github.com/adrienaury/go-template
+PROJECT = go-template
+TAG     = refactor
+COMMIT  = b0b418aa05db7f386275249ea641f14b295cf3ab
+DATE    = 2021-05-02
+BY      = adrienaury@gmail.com
+RELEASE = no
+--------------------------------------------- refresh --
+go: creating new go.mod: module github.com/adrienaury/go-template
+go: to add module requirements and sums:
+        go mod tidy
+------------------------------------------------ lint --
+Running command: golangci-lint run --fast --enable-all --disable scopelint --disable forbidigo
+OK
+```
+
+By default, all fast linters are enabled (`--fast` and `--enable-all` flags on `golangci-lint`) but you can change this with the following build properties :
+
+- linters : an array of linters to enable, if left empty then all fast linters are enabled.
+- lintersno : an array of linters to disable, by default `scopelint` (deprecated) and `forbidigo` ar disabled.
+
+To change the default values, edit the `build.yml` file and look for the properties names `linters` or `lintersno`.
+
+These build properties can also be set by the `neon -props` flag.
+
+```console
+$ neon -props '{linters: ["deadcode"]}' lint
+----------------------------------------------- info --
+MODULE  = github.com/adrienaury/go-template
+PROJECT = go-template
+TAG     = refactor
+COMMIT  = b0b418aa05db7f386275249ea641f14b295cf3ab
+DATE    = 2021-05-02
+BY      = adrienaury@gmail.com
+RELEASE = no
+--------------------------------------------- refresh --
+go: creating new go.mod: module github.com/adrienaury/go-template
+go: to add module requirements and sums:
+        go mod tidy
+------------------------------------------------ lint --
+Running command: golangci-lint run --enable deadcode --disable scopelint --disable forbidigo
 OK
 ```
 

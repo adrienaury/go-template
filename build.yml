@@ -58,6 +58,15 @@ targets:
       - print: "publish     Publish tagged binary to Github [will trigger: info->refresh->lint->test]"
       - print: ""
       - print: 'Example : neon -props "{latest: true}" promote publish'
+      - print: ""
+      - print: |
+          Target dependencies
+          → help
+          → promote
+          → info ┰─ docker ── docker-tag
+                 ┖─ refresh ┰─ compile
+                            ┖─ lint ─ test ┰ release ─ test-int
+                                           ┖─publish
 
   info:
     doc: "print build informations"

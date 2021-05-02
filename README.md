@@ -73,6 +73,92 @@ Accept and enjoy !
   - docker-tag : tag docker images using semantic versioning
   - docker-publish : publish docker images on Dockerhub
 
+### Build targets
+
+Run a build target by using the neon command.
+
+```console
+neon target
+```
+
+This text bloc show how target are related to each other. E.g. running the target `lint` will also run `info` and `refresh`.
+
+```text
+→ help
+→ promote
+→ info ┰─ docker ── docker-tag
+       ┖─ refresh ┰─ compile
+                  ┖─ lint ─ test ┰ release ─ test-int
+                                 ┖─publish
+```
+
+#### Help
+
+```console
+$ neon help
+Available targets
+
+help        Print this message
+info        Print build informations
+promote     Promote the project with a new tag based on git log history
+refresh     Refresh go modules (add missing and remove unused modules) [will trigger: info]
+compile     Compile binary files locally [will trigger: info->refresh]
+lint        Examine source code and report suspicious constructs [will trigger: info->refresh]
+test        Run all tests with coverage [will trigger: info->refresh->lint]
+release     Compile binary files for production [will trigger: info->refresh->lint->test]
+test-int    Run all integration tests [will trigger: info->refresh->lint->test->release]
+docker      Build docker images [will trigger: info]
+docker-tag  Tag docker images [will trigger: info->docker]
+publish     Publish tagged binary to Github [will trigger: info->refresh->lint->test]
+
+Example : neon -props "{latest: true}" promote publish
+
+Target dependencies
+→ help
+→ promote
+→ info ┰─ docker ── docker-tag
+       ┖─ refresh ┰─ compile
+                  ┖─ lint ─ test ┰ release ─ test-int
+                                 ┖─publish
+
+OK
+```
+
+#### Info
+
+Print build informations, like the author or the current tag.
+
+```console
+$ neon info
+------------------------------------------------ info --
+MODULE  = github.com/adrienaury/go-template
+PROJECT = go-template
+TAG     = refactor
+COMMIT  = 00424c8c67bca5b11ed99efa0d45902f1143cbd7
+DATE    = 2021-05-02
+BY      = adrienaury@gmail.com
+RELEASE = no
+OK
+```
+
+#### Promote
+
+Promote the project with a new tag based on git log history, or based on the parameter passed with `-props` flag.
+
+```console
+$ neon promote
+------------------------------------------------ promote --
+Promoted to v0.2.0
+OK
+```
+
+```console
+$ neon -props '{tag: "v0.2.1-alpha"}' promote
+------------------------------------------------ promote --
+Promoted to v0.2.1-alpha
+OK
+```
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.

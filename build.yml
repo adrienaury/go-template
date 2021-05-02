@@ -224,7 +224,7 @@ targets:
       - $: (export LDFLAGS="={ldflags}"; export BUILDPATHS="={buildpaths}"; cat .goreleaser.template.yml | gomplate)
         1>: ={BUILD_DIR}/.goreleaser.yml
         1x: true
-      - $: goreleaser release -f ={BUILD_DIR}/.goreleaser.yml --rm-dist --snapshot # TODO : remove --rm-dist --snapshot
+      - $: goreleaser release -f ={BUILD_DIR}/.goreleaser.yml --rm-dist
 
   # run "neon -props '{dockerfiles: {"path/to/Dockerfile1": "path/to/root/build/context"}}' docker" to build specific Dockerfiles
   # example : neon -props '{dockerfiles: {"Dockerfile": "."}}' docker

@@ -82,7 +82,7 @@ Accept and enjoy !
   - [`publish`](#publish) : publish binaries on Github with goreleaser
   - [`docker`](#docker) : build docker images
   - [`docker-tag`](#docker-tag) : tag docker images using semantic versioning
-  - [`docker-publish`](#docker-publish) : publish docker images on Dockerhub
+  - [`docker-push`](#docker-push) : publish docker images on Dockerhub
 
 ### Build targets
 
@@ -97,7 +97,7 @@ This text bloc show how target are related to each other. E.g. running the targe
 ```text
 → help
 → promote
-→ info ┰─ docker ── docker-tag ── docker-publish
+→ info ┰─ docker ── docker-tag ── docker-push
        ┖─ refresh ┰─ compile
                   ┖─ lint ─ test ─ release ─ test-int ─ publish
 ```
@@ -131,7 +131,7 @@ Example : neon -props "{latest: true}" promote publish
 Target dependencies
 → help
 → promote
-→ info ┰─ docker ── docker-tag ── docker-publish
+→ info ┰─ docker ── docker-tag ── docker-push
        ┖─ refresh ┰─ compile
                   ┖─ lint ─ test ─ release ─ test-int ─ publish
 
@@ -655,7 +655,7 @@ adrienaury/go-template-webserver                       v0.2.0                sha
 OK
 ```
 
-#### Docker-publish
+#### Docker-push
 
 Publish tagged docker images to Dockerhub.
 

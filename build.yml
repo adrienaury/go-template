@@ -13,7 +13,7 @@ expose:
     "publish",
     "docker",
     "docker-tag",
-    "docker-publish",
+    "docker-push",
   ]
 configuration: ["~/.dockerhub.yml", "~/.github.yml"] # DO NOT COMMIT THESE FILES
 # ~/.dockerhub.yml should contains:
@@ -60,7 +60,7 @@ targets:
           print -P "%B%F{blue}publish%f%b      Publish tagged binary to Github [info->refresh->lint->test->release->test-int]"
           print -P "%B%F{blue}docker%f%b       Build docker images [info]"
           print -P "%B%F{blue}docker-tag%f%b   Tag docker images [info->docker]"
-          print -P "%B%F{blue}docker-publish%f%b  Publish docker images to Dockerhub [info->docker->docker-tag]"
+          print -P "%B%F{blue}docker-push%f%b  Publish docker images to Dockerhub [info->docker->docker-tag]"
           print
           print -P "%BExample:%b neon -props '{latest$: true}' promote publish"
           print
@@ -68,7 +68,7 @@ targets:
           print
           print -P "→ help"
           print -P "→ promote"
-          print -P "→ info ┰ docker → docker-tag → docker-publish"
+          print -P "→ info ┰ docker → docker-tag → docker-push"
           print -P "       ┖ refresh ┰ compile"
           print -P "                 ┖ lint → test → release → test-int → publish"
 
@@ -307,8 +307,8 @@ targets:
                 DOCKERHUB_PASS: <your dockerhub password or a dockerhub token>
           - $: return 1
 
-  # run "neon -props '{latest: true}' docker-publish" to include latest tag
-  docker-publish:
+  # run "neon -props '{latest: true}' docker-push" to include latest tag
+  docker-push:
     doc: "Push docker images to Dockerhub"
     # unless: 'is_release != "yes"' => is_release unknown variable, issue to open
     depends: ["docker", "docker-tag", "docker-login"]

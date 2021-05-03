@@ -23,7 +23,7 @@ Details are available on [the official Visual Studio documentation](https://code
 
 ### Initialize a new repository using Github
 
-When you [create a new repository on Github](https://github.com/new), you can select this project in the `Repository template` field. It will automatically initialize your new repository with this template.
+Use the button `Use this template` at the top of this page. It will automatically initialize your new repository with this template.
 
 ### Initialize a new repository without using Github
 
@@ -43,6 +43,17 @@ Warning: do this in a branch where to isolate the changes
 $ cd </your/project/root>
 /your/project/root$ wget -nv -O- https://github.com/adrienaury/go-devcontainer/archive/refs/heads/main.tar.gz | tar --strip-components=1 -xz
 ```
+
+### Things you might want to delete
+
+- the `.vscode` folder contains a VSCode color theme, you might want to remove this folder, or customize the colors
+- the `githooks/commit-msg` file contains a commit message check to enforce [semantic commit message](https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716)
+- the `Makefile` if you want to only use the neon build tool, but I think it's nice to give a well known handle to the build workflow
+- the `Dockerfile` and the `Dockerfile.webserver` if your project does not produce Docker images (DO NOT DELETE the `docker-compose.yml` file, you can move it under `.devcontainer` and adapt paths)
+- the `LICENSE` file as your project is not copyrighted by me ! Replace it by your own license
+- everything under `test/suites`, replace it with your own tests suites or remove the `test` folder completely if you don't do integration tests
+- every `.go` file will have to be deleted, as well as folders under `cmd`, `pkg` and `internal`
+- and of course, this `README.md` file
 
 ### Run your workspace
 

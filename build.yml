@@ -38,37 +38,39 @@ properties:
     Dockerfile: . # Build a file named Dockerfile at the root of the workspace, will produce image name "<DOCKERHUB_USER>/<PROJECT>"
     Dockerfile.webserver: . # Build a file named Dockerfile.webserver at the root of the workspace, will produce image name "<DOCKERHUB_USER>/<PROJECT>-webserver"
 
+shell: ["zsh", "-c"]
+
 targets:
   help:
     doc: "Print this message"
     steps:
       # - $: 'neon -info' => incorrect order, issue to open
-      - color: "cyan"
-        print: "Available targets"
-      - print: ""
-      - print: "help            Print this message"
-      - print: "info            Print build informations"
-      - print: "promote         Promote the project with a new tag based on git log history"
-      - print: "refresh         Refresh go modules (add missing and remove unused modules) [will trigger: info]"
-      - print: "compile         Compile binary files locally [will trigger: info->refresh]"
-      - print: "lint            Examine source code and report suspicious constructs [will trigger: info->refresh]"
-      - print: "test            Run all tests with coverage [will trigger: info->refresh->lint]"
-      - print: "release         Compile binary files for production [will trigger: info->refresh->lint->test]"
-      - print: "test-int        Run all integration tests [will trigger: info->refresh->lint->test->release]"
-      - print: "publish         Publish tagged binary to Github [will trigger: info->refresh->lint->test->release->test-int]"
-      - print: "docker          Build docker images [will trigger: info]"
-      - print: "docker-tag      Tag docker images [will trigger: info->docker]"
-      - print: "docker-publish  Publish docker images to Dockerhub [will trigger: info->docker->docker-tag]"
-      - print: ""
-      - print: 'Example : neon -props "{latest: true}" promote publish'
-      - print: ""
-      - print: |
-          Target dependencies
-          → help
-          → promote
-          → info ┰─ docker ── docker-tag ── docker-publish
-                 ┖─ refresh ┰─ compile
-                            ┖─ lint ─ test ─ release ─ test-int ─ publish
+      - $: |
+          print -P "%BAvailable targets%b"
+          print
+          print -P "%B%F{blue}help%f%b         Print this message"
+          print -P "%B%F{blue}info%f%b         Print build informations"
+          print -P "%B%F{blue}promote%f%b      Promote the project with a new tag based on git log history"
+          print -P "%B%F{blue}refresh%f%b      Refresh go modules (add missing and remove unused modules) [info]"
+          print -P "%B%F{blue}compile%f%b      Compile binary files locally [info->refresh]"
+          print -P "%B%F{blue}lint%f%b         Examine source code and report suspicious constructs [info->refresh]"
+          print -P "%B%F{blue}test%f%b         Run all tests with coverage [info->refresh->lint]"
+          print -P "%B%F{blue}release%f%b      Compile binary files for production [info->refresh->lint->test]"
+          print -P "%B%F{blue}test-int%f%b     Run all integration tests [info->refresh->lint->test->release]"
+          print -P "%B%F{blue}publish%f%b      Publish tagged binary to Github [info->refresh->lint->test->release->test-int]"
+          print -P "%B%F{blue}docker%f%b       Build docker images [info]"
+          print -P "%B%F{blue}docker-tag%f%b   Tag docker images [info->docker]"
+          print -P "%B%F{blue}docker-publish%f%b  Publish docker images to Dockerhub [info->docker->docker-tag]"
+          print
+          print -P "%BExample:%b neon -props '{latest$: true}' promote publish"
+          print
+          print -P "%BTarget dependencies%b"
+          print
+          print -P "→ help"
+          print -P "→ promote"
+          print -P "→ info ┰ docker → docker-tag → docker-publish"
+          print -P "       ┖ refresh ┰ compile"
+          print -P "                 ┖ lint → test → release → test-int → publish"
 
   info:
     doc: "Print build informations"

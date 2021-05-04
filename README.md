@@ -41,7 +41,7 @@ Warning: do this in a branch where to isolate the changes
 
 ```console
 $ cd </your/project/root>
-/your/project/root$ wget -nv -O- https://github.com/adrienaury/go-devcontainer/archive/refs/heads/main.tar.gz | tar --strip-components=1 -xz
+/your/project/root$ wget -nv -O- https://github.com/adrienaury/go-template/archive/refs/heads/main.tar.gz | tar --strip-components=1 -xz
 ```
 
 ### Things you might want to delete

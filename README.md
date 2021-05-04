@@ -29,7 +29,7 @@ Use the button `Use this template` at the top of this page. It will automaticall
 
 ```console
 $ cd </your/project/root>
-/your/project/root$ wget -nv -O- https://github.com/adrienaury/go-devcontainer/archive/refs/heads/main.tar.gz | tar --strip-components=1 -xz
+/your/project/root$ wget -nv -O- https://github.com/adrienaury/go-template/archive/refs/heads/main.tar.gz | tar --strip-components=1 -xz
 /your/project/root$ git init -b main
 /your/project/root$ git add .
 /your/project/root$ git commit -m "chore: init repository from go template"

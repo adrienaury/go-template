@@ -62,7 +62,7 @@ targets:
           print -P "%B%F{blue}docker-tag%f%b   Tag docker images [info->docker]"
           print -P "%B%F{blue}docker-push%f%b  Publish docker images to Dockerhub [info->docker->docker-tag]"
           print
-          print -P "%BExample:%b neon -props '{latest$: true}' promote publish"
+          print -P "%BExample:%b neon -props '{latest: true}' promote publish"
           print
           print -P "%BTarget dependencies%b"
           print

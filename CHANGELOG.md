@@ -16,8 +16,15 @@ Types of changes
 
 ## [Unreleased]
 
-- `Changed` Publish target now depends from the `test-int` target
+- `Added` Colors in neon help target
+- `Fixed` Git ignore
 - `Changed` Improved default linters configuration, and cleaner gopls configuration
+- `Changed` Build target `docker-publish` renamed to `docker-push`
+
+## [0.2.0]
+
+- `Fixed` Publish target works properly
+- `Changed` Publish target now depends from the `test-int` target
 
 ## [0.1.0]
 

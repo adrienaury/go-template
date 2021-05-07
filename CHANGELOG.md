@@ -17,6 +17,7 @@ Types of changes
 ## [Unreleased]
 
 - `Changed` Publish target now depends from the `test-int` target
+- `Changed` Improved default linters configuration, and cleaner gopls configuration
 
 ## [0.1.0]
 

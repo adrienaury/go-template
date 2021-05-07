@@ -32,8 +32,8 @@ properties:
   latest: false # Do not tag the Docker image with latest, specify othewise with `-props "{latest: true}"`
   ldflags: "" # Specify a additional ldflags with `-props "{ldflags: '<flags>'}"`
   buildpaths: [] # By default, all paths under the cmd/ folder are built, specify a different folder list with `-props "{buildpaths: ["other/path", "to/build"]}"`
-  linters: [] # List of linters to run on the lint target, if left empty : run all fast linters
-  lintersno: ["scopelint", "forbidigo"] # List of linters to exclude on running the lint target
+  linters: [] # List of linters to run on the lint target, if left empty : run all linters
+  lintersno: ["scopelint", "interfacer", "maligned", "forbidigo", "gci"] # List of linters to exclude on running the lint target
   dockerfiles: # List of Dockerfiles to build, defined by a map of {key=Dockerfile name ; value=path to build context}, the image name will be determined by the extension of the Dockerfile
     Dockerfile: . # Build a file named Dockerfile at the root of the workspace, will produce image name "<DOCKERHUB_USER>/<PROJECT>"
     Dockerfile.webserver: . # Build a file named Dockerfile.webserver at the root of the workspace, will produce image name "<DOCKERHUB_USER>/<PROJECT>-webserver"
@@ -185,7 +185,7 @@ targets:
     steps:
       - if: len(linters) == 0
         then:
-          - $: golangci-lint run --fast --enable-all ={replace(join(appendpath("--disable", lintersno), " "), "/", " ")}
+          - $: golangci-lint run --enable-all ={replace(join(appendpath("--disable", lintersno), " "), "/", " ")}
             :: true
         else:
           - $: golangci-lint run ={replace(join(appendpath("--enable", linters), " "), "/", " ")} ={replace(join(appendpath("--disable", lintersno), " "), "/", " ")}

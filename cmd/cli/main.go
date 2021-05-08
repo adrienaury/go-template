@@ -23,10 +23,12 @@
 package main
 
 import (
-	"fmt"
+	"os"
 
 	"github.com/adrienaury/go-template/internal/helloservice"
 	"github.com/adrienaury/go-template/pkg/nameservice"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 )
 
 // Provisioned by ldflags
@@ -40,9 +42,9 @@ var (
 )
 
 func main() {
-	fmt.Printf("%s", helloservice.Hello(nameservice.GetName()))
-	fmt.Println()
+	// nolint: exhaustivestruct
+	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 
-	fmt.Printf("%v %v (commit=%v date=%v by=%v)\n", name, version, commit, buildDate, builtBy)
-	fmt.Println()
+	log.Info().Msgf("%v %v (commit=%v date=%v by=%v)", name, version, commit, buildDate, builtBy)
+	log.Info().Msgf("%s", helloservice.Hello(nameservice.GetName()))
 }

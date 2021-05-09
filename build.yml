@@ -78,10 +78,9 @@ targets:
   info:
     doc: "Print build informations"
     steps:
-      - $: pwd
       - $: mkdir -p ={BUILD_DIR}
-      - $: ls -al
       - $: git symbolic-ref -q --short HEAD
+        :: true
       - $: "git describe --tags --exact-match 2>/dev/null || git symbolic-ref -q --short HEAD"
         1=: "tag"
         3x: true

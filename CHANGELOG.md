@@ -14,7 +14,7 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
-## [Unreleased]
+## [0.3.0]
 
 - `Added` Colors in neon help target
 - `Added` License target to scan 3rd party licenses and generate notice file

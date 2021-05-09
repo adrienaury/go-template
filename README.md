@@ -44,16 +44,17 @@ $ cd </your/project/root>
 /your/project/root$ wget -nv -O- https://github.com/adrienaury/go-template/archive/refs/heads/main.tar.gz | tar --strip-components=1 -xz
 ```
 
-### Things you might want to delete
+### Things you might or should delete (or replace)
 
-- the `.vscode` folder contains a VSCode color theme, you might want to remove this folder, or customize the colors
-- the `githooks/commit-msg` file contains a commit message check to enforce [semantic commit message](https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716)
-- the `Makefile` if you want to only use the neon build tool, but I think it's nice to give a well known handle to the build workflow
-- the `Dockerfile` and the `Dockerfile.webserver` if your project does not produce Docker images (DO NOT DELETE the `docker-compose.yml` file, you can move it under `.devcontainer` and adapt paths)
-- the `LICENSE` file as your project is not copyrighted by me ! Replace it by your own license
-- everything under `test/suites`, replace it with your own tests suites or remove the `test` folder completely if you don't do integration tests
-- every `.go` file will have to be deleted, as well as folders under `cmd`, `pkg` and `internal`
-- and of course, this `README.md` file
+- might: the `.vscode` folder contains a VSCode color theme, you might want to remove this folder, or customize the colors
+- might: the `githooks/commit-msg` file contains a commit message check to enforce [semantic commit message](https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716)
+- might: the `Makefile` if you want to only use the neon build tool, but I think it's nice to give a well known handle to the build workflow
+- might: the `.github` folder if you don't want to use GitHub actions
+- should: the `Dockerfile` and the `Dockerfile.webserver` if your project does not produce Docker images (DO NOT DELETE the `docker-compose.yml` file, you can move it under `.devcontainer` and adapt paths)
+- should: the `LICENSE` file as your project is not copyrighted by me ! Replace it by your own license
+- should: everything under `test/suites`, replace it with your own tests suites or remove the `test` folder completely if you don't do integration tests
+- should: every `.go` file will have to be deleted, as well as folders under `cmd`, `pkg` and `internal`
+- should: this `README.md` file, of course ;)
 
 ### Run your workspace
 
@@ -69,6 +70,7 @@ Accept and enjoy !
 - Changelog, Contrib : all initialized with default templates
 - Git commit message semantic validation
 - Docker compatible (docker client and docker-compose are available inside the devcontainer)
+- Pre-configured GitHub action to pass CI on pull requests
 - Build targets (run with `make` or `neon`) :
   - [`help`](#help-target) : default target, print help message
   - [`info`](#info-target) : print information on the build pipeline

@@ -70,7 +70,7 @@ Accept and enjoy !
 - Changelog, Contrib : all initialized with default templates
 - Git commit message semantic validation
 - Docker compatible (docker client and docker-compose are available inside the devcontainer)
-- Pre-configured GitHub action to pass CI on pull requests
+- Pre-configured GitHub actions : CI on pull requests, Release on tag
 - Build targets (run with `make` or `neon`) :
   - [`help`](#help-target) : default target, print help message
   - [`info`](#info-target) : print information on the build pipeline
@@ -542,7 +542,7 @@ Building cmd/webserver
 OK
 ```
 
-The build properties are the same as the [`compile`](#compile) target.
+The build properties are the same as the [`compile`](#compile) target. Additionaly the `snapshot` property can be set to `true` to run the target without uploading anything to GitHub.
 
 #### Docker target
 

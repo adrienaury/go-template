@@ -5,7 +5,6 @@ name: Release
 # Controls when the action will run.
 on:
   push:
-    branches: [main]
     tags:
       - "*"
 
@@ -37,11 +36,14 @@ jobs:
 
       - uses: FranzDiebold/github-env-vars-action@v2
       - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          echo "GITHUB_TOKEN: $GITHUB_TOKEN" > ~/.github.yml
           docker-compose exec \
             -T \
             -u root \
             -w /workspace \
             -e PATH=/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin:/home/vscode/go/bin:/workspace/bin \
             vscode \
-            neon -props "{snapshot: true, tag: ${CI_ACTION_REF_NAME_SLUG}, MODULE: github.com/${CI_REPOSITORY}, BY: ${CI_ACTOR}}" publish
+            neon -props "{tag: ${CI_ACTION_REF_NAME_SLUG}, MODULE: github.com/${CI_REPOSITORY}, BY: ${CI_ACTOR}}" publish

@@ -63,6 +63,14 @@ release: warning
 test-int: warning
 	@neon test-int
 
+.PHONY: publish-%
+publish-%: warning
+	@neon -props "{buildpaths: ["cmd/$*"]}" publish
+
+.PHONY: publish
+publish: warning
+	@neon publish
+
 .PHONY: docker
 docker: warning
 	@neon docker
@@ -75,9 +83,9 @@ docker-tag: warning
 docker-push: warning
 	@neon docker-push
 
-.PHONY: publish
-publish: warning
-	@neon publish
+.PHONY: license-%
+license-%: warning
+	@neon -props "{buildpaths: ["cmd/$*"]}" license
 
 .PHONY: license
 license: warning

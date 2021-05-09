@@ -93,7 +93,7 @@ targets:
             1=: "tag"
             3x: true
         else:
-          - $: "echo -n ={TAG}"
+          - $: "echo -n ={tag}"
             1=: "tag"
             3x: true
       - $: 'echo -n "={tag}" | sed -e s/^v//'

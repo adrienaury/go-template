@@ -79,11 +79,12 @@ targets:
     doc: "Print build informations"
     steps:
       - $: mkdir -p ={BUILD_DIR}
-      - $: git symbolic-ref -q --short HEAD
-        :: true
-      - $: "git describe --tags --exact-match 2>/dev/null || git symbolic-ref -q --short HEAD"
-        1=: "tag"
-        3x: true
+      - try:
+          - $: "git describe --tags --exact-match 2>/dev/null || git symbolic-ref -q --short HEAD"
+            1=: "tag"
+            3x: true
+        catch:
+          - $: Using tag ={tag}
       - $: 'echo -n "={tag}" | sed -e s/^v//'
         1=: "version"
         3x: true

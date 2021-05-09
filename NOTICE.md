@@ -13,3 +13,4 @@ The following 3rd-party software components may be used by or distributed with t
 | module | license |
 | --- | --- |
 | github.com/gorilla/mux | BSD 3-Clause "New" or "Revised" License |
+| github.com/rs/zerolog | MIT License |

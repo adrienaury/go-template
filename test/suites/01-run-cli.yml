@@ -7,3 +7,4 @@ testcases:
       - script: webserver
         assertions:
           - result.systemout ShouldContainSubstring Hello World!
+          - result.code ShouldEqual 0

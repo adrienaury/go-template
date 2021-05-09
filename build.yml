@@ -25,8 +25,10 @@ configuration: ["~/.dockerhub.yml", "~/.github.yml"] # DO NOT COMMIT THESE FILES
 
 properties:
   # Build Configuration (edit this section to override default values)
+  BY: "" # leave empty to default to the user.email property in git configuration
   MODULE: "" # leave empty to default to the git remote url (e.g. "github.com/<usename>/<reponame>")
   PROJECT: "" # leave empty to default to the git repository name (e.g. "<reponame>")
+  TAG: "" # leave empty to default to the current branch or tag
   LDFLAGS: "" # add custom standard ldflags, will be applied everywhere everytime
   BUILD_DIR: "bin" # subfolder where the build will output
   # Build parameters (use the -props flag to change these default values)
@@ -79,9 +81,15 @@ targets:
     doc: "Print build informations"
     steps:
       - $: mkdir -p ={BUILD_DIR}
-      - $: "git describe --tags --exact-match 2>/dev/null || git symbolic-ref -q --short HEAD"
-        1=: "tag"
-        3x: true
+      - if: TAG == ""
+        then:
+          - $: "git describe --tags --exact-match 2>/dev/null || git symbolic-ref -q --short HEAD"
+            1=: "tag"
+            3x: true
+        else:
+          - $: "echo -n ={TAG}"
+            1=: "tag"
+            3x: true
       - $: 'echo -n "={tag}" | sed -e s/^v//'
         1=: "version"
         3x: true
@@ -89,13 +97,15 @@ targets:
         1=: "commit"
         3x: true
       - "date = now()[0:10]"
-      - try:
+      - if: BY == ""
+        then:
           - $: "git config user.email"
             1=: "by"
             3x: true
-        catch:
-          - print: "User email not defined, use 'git config user.email <your email>'"
-          - $: "exit 1"
+        else:
+          - $: "echo -n ={BY}"
+            1=: "by"
+            3x: true
       - $: 'if expr match "={version}" "\d\+\.\d\+\.\d\+" 1>/dev/null 2>&1; then echo -n "yes"; else echo -n "no"; fi'
         1=: "is_release"
         3x: true

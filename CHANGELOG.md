@@ -18,6 +18,7 @@ Types of changes
 
 - `Added` Colors in neon help target
 - `Added` License target to scan 3rd party licenses and generate notice file
+- `Added` Default GitHub action for CI checks, run on push or pull request events but only for the main branch
 - `Fixed` Cleaner git ignore
 - `Changed` Improved default linters configuration, and cleaner gopls configuration
 - `Changed` Build target `docker-publish` renamed to `docker-push`

@@ -23,6 +23,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/adrienaury/go-template/internal/helloservice"
@@ -46,5 +47,7 @@ func main() {
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 
 	log.Info().Msgf("%v %v (commit=%v date=%v by=%v)", name, version, commit, buildDate, builtBy)
-	log.Info().Msgf("%s", helloservice.Hello(nameservice.GetName()))
+
+	fmt.Printf("%s", helloservice.Hello(nameservice.GetName()))
+	fmt.Println()
 }

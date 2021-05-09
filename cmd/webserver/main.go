@@ -25,10 +25,13 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"os"
 
 	"github.com/adrienaury/go-template/internal/helloservice"
 	"github.com/adrienaury/go-template/pkg/nameservice"
 	"github.com/gorilla/mux"
+	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 )
 
 // Provisioned by ldflags
@@ -42,12 +45,12 @@ var (
 )
 
 func main() {
-	fmt.Println("This is the web server.")
+	// nolint: exhaustivestruct
+	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	log.Info().Msgf("%v %v (commit=%v date=%v by=%v)", name, version, commit, buildDate, builtBy)
+	log.Info().Msg("This is the web server.")
 
 	fmt.Printf("%s", helloservice.Hello(nameservice.GetName()))
-	fmt.Println()
-
-	fmt.Printf("%v %v (commit=%v date=%v by=%v)\n", name, version, commit, buildDate, builtBy)
 	fmt.Println()
 
 	r := mux.NewRouter()

@@ -14,6 +14,7 @@ expose:
     "docker",
     "docker-tag",
     "docker-push",
+    "license",
   ]
 configuration: ["~/.dockerhub.yml", "~/.github.yml"] # DO NOT COMMIT THESE FILES
 # ~/.dockerhub.yml should contains:
@@ -61,7 +62,7 @@ targets:
           print -P "%B%F{blue}docker%f%b       Build docker images [info]"
           print -P "%B%F{blue}docker-tag%f%b   Tag docker images [info->docker]"
           print -P "%B%F{blue}docker-push%f%b  Publish docker images to Dockerhub [info->docker->docker-tag]"
-          print -P "%B%F{blue}license%f%b      Scan licenses from binaries [info->refresh->compile]"
+          print -P "%B%F{blue}license%f%b      Scan licenses from binaries and generate notice file [info->refresh->compile]"
           print
           print -P "%BExample:%b neon -props '{latest: true}' promote publish"
           print
@@ -337,9 +338,11 @@ targets:
             color: red
 
   license:
-    doc: "Scan licenses from binaries"
+    doc: "Scan licenses from binaries and generate notice file"
     depends: ["info", "refresh", "compile"]
     steps:
+      - $: echo -e "# 3rd-Party Software Licenses\n" > NOTICE.md
+      - $: echo "The following 3rd-party software components may be used by or distributed with this project. Any information relevant to third-party vendors listed below are collected using common, reasonable means." >> NOTICE.md
       - try:
           - $: echo -n "={GITHUB_TOKEN}"
             1=: token
@@ -358,4 +361,5 @@ targets:
             name = pathcomponents[len(pathcomponents)-1]
           - print: Scanning ={name}
           - $: |
-              (export GITHUB_TOKEN=={token}; golicense -plain ={BUILD_DIR}/={name} | awk '{ printf "{\"module\":\"%s\"", $1; $1=""; gsub("\"","\\\"",$0); printf ",\"license\":\"%s\"}\n", substr($0,2) }' | mlr --ijson --opprint --barred sort -f module then cat)
+              echo -e "\n## ={name}\n" >> NOTICE.md
+              (export GITHUB_TOKEN=={token}; golicense -plain ={BUILD_DIR}/={name} | awk '{ printf "{\"module\":\"%s\"", $1; $1=""; gsub("\"","\\\"",$0); printf ",\"license\":\"%s\"}\n", substr($0,2) }' | mlr --ijson --omd sort -f module then cat >> NOTICE.md)

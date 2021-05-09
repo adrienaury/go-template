@@ -24,9 +24,11 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 
 	"github.com/adrienaury/go-template/internal/helloservice"
 	"github.com/adrienaury/go-template/pkg/nameservice"
+	"github.com/gorilla/mux"
 )
 
 // Provisioned by ldflags
@@ -47,4 +49,12 @@ func main() {
 
 	fmt.Printf("%v %v (commit=%v date=%v by=%v)\n", name, version, commit, buildDate, builtBy)
 	fmt.Println()
+
+	r := mux.NewRouter()
+	r.HandleFunc("/version", VersionHandler)
+}
+
+func VersionHandler(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusOK)
+	fmt.Printf("%v %v (commit=%v date=%v by=%v)\n", name, version, commit, buildDate, builtBy)
 }

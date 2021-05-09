@@ -31,5 +31,8 @@ jobs:
       - name: Start services
         run: docker-compose up -d vscode
 
+      - name: Init env
+        run: docker-compose exec -T -w /workspace vscode make init
+
       - name: Run CI # up to test-int (info → refresh → lint → test → release → test-int)
         run: docker-compose exec -T -w /workspace vscode neon test-int

@@ -357,4 +357,5 @@ targets:
             pathcomponents = split(unixpath(path), "/")
             name = pathcomponents[len(pathcomponents)-1]
           - print: Scanning ={name}
-          - $: (export GITHUB_TOKEN=={token}; golicense -plain ={BUILD_DIR}/={name} | awk '{ printf "{\"module\":\"%s\"", $1; $1=""; printf ",\"license\":\"%s\"}\n", substr($0,2) }' | mlr --ijson --opprint --barred sort -f module then cat)
+          - $: |
+              (export GITHUB_TOKEN=={token}; golicense -plain ={BUILD_DIR}/={name} | awk '{ printf "{\"module\":\"%s\"", $1; $1=""; gsub("\"","\\\"",$0); printf ",\"license\":\"%s\"}\n", substr($0,2) }' | mlr --ijson --opprint --barred sort -f module then cat)

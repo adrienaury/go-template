@@ -34,11 +34,11 @@ jobs:
       - name: Init env
         run: docker-compose exec -T -u root -w /workspace vscode make init
 
-      - name: Fix user
-        run: docker-compose exec -T -u root -w /workspace vscode chown -R vscode:vscode .
+      - name: Debug
+        run: "git symbolic-ref -q --short HEAD || :"
 
       - uses: nelonoel/branch-name@v1.0.1
 
       - name: Run CI # up to test-int (info → refresh → lint → test → release → test-int)
         run: |
-          docker-compose exec -T -u root -w /workspace vscode neon -props "{CI: true, tag: $BRANCH_NAME, by: octocat@github.com}" test-int
+          docker-compose exec -T -u root -w /workspace vscode neon -props "{CI: true, tag: ${BRANCH_NAME}, MODULE: github.com/${GITHUB_REPOSITORY}, BY: octocat@github.com}" test-int

@@ -38,6 +38,7 @@ properties:
   buildpaths: [] # By default, all paths under the cmd/ folder are built, specify a different folder list with `-props "{buildpaths: ["other/path", "to/build"]}"`
   linters: [] # List of linters to run on the lint target, if left empty : run all linters
   lintersno: ["scopelint", "interfacer", "maligned", "forbidigo", "gci"] # List of linters to exclude on running the lint target
+  snapshot: false # If true, do not upload release when publish target is used
   dockerfiles: # List of Dockerfiles to build, defined by a map of {key=Dockerfile name ; value=path to build context}, the image name will be determined by the extension of the Dockerfile
     Dockerfile: . # Build a file named Dockerfile at the root of the workspace, will produce image name "<DOCKERHUB_USER>/<PROJECT>"
     Dockerfile.webserver: . # Build a file named Dockerfile.webserver at the root of the workspace, will produce image name "<DOCKERHUB_USER>/<PROJECT>-webserver"
@@ -73,7 +74,7 @@ targets:
           print -P "%B%F{blue}docker-push%f%b  Publish docker images to Dockerhub [info->docker->docker-tag]"
           print -P "%B%F{blue}license%f%b      Scan licenses from binaries and generate notice file [info->refresh->compile]"
           print
-          print -P "%BExample:%b neon -props '{latest: true}' promote publish"
+          print -P "%BExample:%b neon -props '{latest: true}' promote publish docker-push"
           print
           print -P "%BTarget dependencies%b"
           print
@@ -246,7 +247,12 @@ targets:
       - $: (export LDFLAGS="={ldflags}"; export BUILDPATHS="={buildpaths}"; cat .goreleaser.template.yml | gomplate)
         1>: ={BUILD_DIR}/.goreleaser.yml
         1x: true
-      - $: (export GITHUB_TOKEN=={GITHUB_TOKEN}; goreleaser release -f ={BUILD_DIR}/.goreleaser.yml --rm-dist)
+      - if: snapshot
+        then:
+          - $: goreleaser release -f ={BUILD_DIR}/.goreleaser.yml --rm-dist --snapshot
+        else:
+          - $: (export GITHUB_TOKEN=={GITHUB_TOKEN}; goreleaser release -f ={BUILD_DIR}/.goreleaser.yml --rm-dist)
+      - $: go mod tidy
 
   # run "neon -props '{dockerfiles: {"path/to/Dockerfile1": "path/to/root/build/context"}}' docker" to build specific Dockerfiles
   # example : neon -props '{dockerfiles: {"Dockerfile": "."}}' docker

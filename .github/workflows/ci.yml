@@ -36,6 +36,9 @@ jobs:
 
       - uses: nelonoel/branch-name@v1.0.1
 
+      - name: Debug
+        run: docker-compose exec -T -u root -w /workspace vscode ls -al
+
       - name: Run CI # up to test-int (info → refresh → lint → test → release → test-int)
         run: |
           docker-compose exec -T -u root -w /workspace vscode neon -props "{CI: true, tag: $BRANCH_NAME, by: octocat@github.com}" test-int

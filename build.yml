@@ -84,7 +84,7 @@ targets:
             1=: "tag"
             3x: true
         catch:
-          - $: Using tag ={tag}
+          - $: echo "Using tag ={tag}"
       - $: 'echo -n "={tag}" | sed -e s/^v//'
         1=: "version"
         3x: true

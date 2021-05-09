@@ -39,4 +39,4 @@ jobs:
 
       - name: Run CI # up to test-int (info → refresh → lint → test → release → test-int)
         run: |
-          docker-compose exec -T -u root -w /workspace vscode neon -props "{tag: $TAG}" test-int
+          docker-compose exec -T -e TAG=$TAG -u root -w /workspace vscode neon -props "{CI: true, tag: $TAG, by: octocat@github.com}" test-int

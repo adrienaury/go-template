@@ -25,6 +25,7 @@ configuration: ["~/.dockerhub.yml", "~/.github.yml"] # DO NOT COMMIT THESE FILES
 
 properties:
   # Build Configuration (edit this section to override default values)
+  CI: false # true only on continuous integration platform
   MODULE: "" # leave empty to default to the git remote url (e.g. "github.com/<usename>/<reponame>")
   PROJECT: "" # leave empty to default to the git repository name (e.g. "<reponame>")
   LDFLAGS: "" # add custom standard ldflags, will be applied everywhere everytime
@@ -97,8 +98,12 @@ targets:
             1=: "by"
             3x: true
         catch:
-          - print: "User email not defined, use 'git config user.email <your email>'"
-          - $: "exit 1"
+          - if: CI
+            then:
+              - $: echo "Using author ={by}"
+            else:
+              - print: "User email not defined, use 'git config user.email <your email>'"
+              - $: "exit 1"
       - $: 'if expr match "={version}" "\d\+\.\d\+\.\d\+" 1>/dev/null 2>&1; then echo -n "yes"; else echo -n "no"; fi'
         1=: "is_release"
         3x: true

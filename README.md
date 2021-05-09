@@ -70,19 +70,20 @@ Accept and enjoy !
 - Git commit message semantic validation
 - Docker compatible (docker client and docker-compose are available inside the devcontainer)
 - Build targets (run with `make` or `neon`) :
-  - [`help`](#help) : default target, print help message
-  - [`info`](#info) : print information on the build pipeline
-  - [`promote`](#promote) : promote the project to a new tag using semantic versioning
-  - [`refresh`](#refresh) : refresh go modules dependencies
-  - [`compile`](#compile) : compile sources
-  - [`lint`](#lint) : check the code for suspicious constructs
-  - [`test`](#test) : run the unit tests
-  - [`release`](#release) : compile binaries, with production flags
-  - [`test-int`](#test-int) : run integration tests with venom
-  - [`publish`](#publish) : publish binaries on Github with goreleaser
-  - [`docker`](#docker) : build docker images
-  - [`docker-tag`](#docker-tag) : tag docker images using semantic versioning
-  - [`docker-push`](#docker-push) : publish docker images on Dockerhub
+  - [`help`](#help-target) : default target, print help message
+  - [`info`](#info-target) : print information on the build pipeline
+  - [`promote`](#promote-target) : promote the project to a new tag using semantic versioning
+  - [`refresh`](#refresh-target) : refresh go modules dependencies
+  - [`compile`](#compile-target) : compile sources
+  - [`lint`](#lint-target) : check the code for suspicious constructs
+  - [`test`](#test-target) : run the unit tests
+  - [`release`](#release-target) : compile binaries, with production flags
+  - [`test-int`](#test-int-target) : run integration tests with venom
+  - [`publish`](#publish-target) : publish binaries on Github with goreleaser
+  - [`docker`](#docker-target) : build docker images
+  - [`docker-tag`](#docker-tag-target) : tag docker images using semantic versioning
+  - [`docker-push`](#docker-push-target) : publish docker images on Dockerhub
+  - [`license`](#license-target) : scan binaries for 3rd party licenses and generate a notice file
 
 ### Build targets
 
@@ -97,48 +98,50 @@ This text bloc show how target are related to each other. E.g. running the targe
 ```text
 → help
 → promote
-→ info ┰─ docker ── docker-tag ── docker-push
-       ┖─ refresh ┰─ compile
-                  ┖─ lint ─ test ─ release ─ test-int ─ publish
+→ info ┰ docker → docker-tag → docker-push
+       ┖ refresh ┰ compile → license
+                 ┖ lint → test → release → test-int → publish
 ```
 
 Multiple targets can be run in the same command, e.g. `neon release docker-tag`.
 
 Neon targets are also mapped to a Makefile, so running `make compile` will produce the same result as running `neon compile`.
 
-#### Help
+#### Help target
 
 ```console
 $ neon help
 ----------------------------------------------- help --
 Available targets
 
-help        Print this message
-info        Print build informations
-promote     Promote the project with a new tag based on git log history
-refresh     Refresh go modules (add missing and remove unused modules) [will trigger: info]
-compile     Compile binary files locally [will trigger: info->refresh]
-lint        Examine source code and report suspicious constructs [will trigger: info->refresh]
-test        Run all tests with coverage [will trigger: info->refresh->lint]
-release     Compile binary files for production [will trigger: info->refresh->lint->test]
-test-int    Run all integration tests [will trigger: info->refresh->lint->test->release]
-docker      Build docker images [will trigger: info]
-docker-tag  Tag docker images [will trigger: info->docker]
-publish     Publish tagged binary to Github [will trigger: info->refresh->lint->test]
+help         Print this message
+info         Print build informations
+promote      Promote the project with a new tag based on git log history
+refresh      Refresh go modules (add missing and remove unused modules) [info]
+compile      Compile binary files locally [info->refresh]
+lint         Examine source code and report suspicious constructs [info->refresh]
+test         Run all tests with coverage [info->refresh->lint]
+release      Compile binary files for production [info->refresh->lint->test]
+test-int     Run all integration tests [info->refresh->lint->test->release]
+publish      Publish tagged binary to Github [info->refresh->lint->test->release->test-int]
+docker       Build docker images [info]
+docker-tag   Tag docker images [info->docker]
+docker-push  Publish docker images to Dockerhub [info->docker->docker-tag]
+license      Scan licenses from binaries and generate notice file [info->refresh->compile]
 
-Example : neon -props "{latest: true}" promote publish
+Example: neon -props '{latest: true}' promote publish
 
 Target dependencies
+
 → help
 → promote
-→ info ┰─ docker ── docker-tag ── docker-push
-       ┖─ refresh ┰─ compile
-                  ┖─ lint ─ test ─ release ─ test-int ─ publish
-
+→ info ┰ docker → docker-tag → docker-push
+       ┖ refresh ┰ compile → license
+                 ┖ lint → test → release → test-int → publish
 OK
 ```
 
-#### Info
+#### Info target
 
 Print build informations, like the author or the current tag.
 
@@ -155,7 +158,7 @@ RELEASE = no
 OK
 ```
 
-#### Promote
+#### Promote target
 
 Promote the project with a new tag based on git log history, or based on the parameter passed with `-props` flag.
 
@@ -177,7 +180,7 @@ Promoted to v0.2.1-alpha
 OK
 ```
 
-#### Refresh
+#### Refresh target
 
 Refresh go modules (add missing and remove unused modules).
 
@@ -200,7 +203,7 @@ go: to add module requirements and sums:
 OK
 ```
 
-#### Compile
+#### Compile target
 
 Compile binary files locally.
 
@@ -247,7 +250,7 @@ Building internal/helloservice
 OK
 ```
 
-#### Lint
+#### Lint target
 
 Examine source code and report suspicious constructs. Under the hood, the [`golangci-lint`](https://github.com/golangci/golangci-lint) tool is used.
 
@@ -298,7 +301,7 @@ Running command: golangci-lint run --enable deadcode --disable scopelint --disab
 OK
 ```
 
-#### Test
+#### Test target
 
 Run all tests with coverage.
 
@@ -326,7 +329,7 @@ Running command: golangci-lint run --fast --enable-all --disable scopelint --dis
 OK
 ```
 
-#### Release
+#### Release target
 
 Compile binary files for production.
 
@@ -363,7 +366,7 @@ OK
 
 The build properties are the same as the [`compile`](#compile) target.
 
-#### Test-int
+#### Test-int target
 
 Run all integration tests. Under the hood the tool [`venom`](https://github.com/ovh/venom) is used.
 
@@ -403,7 +406,7 @@ Building cmd/webserver
 OK
 ```
 
-#### Publish
+#### Publish target
 
 Publish tagged binary to Github (as a Release). Under the hood, the [`goreleaser`](https://github.com/goreleaser/goreleaser) tool is used.
 
@@ -539,7 +542,7 @@ OK
 
 The build properties are the same as the [`compile`](#compile) target.
 
-#### Docker
+#### Docker target
 
 Build docker images locally.
 
@@ -587,7 +590,7 @@ adrienaury/go-template                                 refactor              sha
 OK
 ```
 
-#### Docker-tag
+#### Docker-tag target
 
 Tag docker images. This target will run only if the tag being built is a release tag (vX.Y.Z).
 
@@ -655,13 +658,22 @@ adrienaury/go-template-webserver                       v0.2.0                sha
 OK
 ```
 
-#### Docker-push
+#### Docker-push target
 
 Publish tagged docker images to Dockerhub.
 
 A prerequisite to this target is that a file named `.dockerhub.yml` at the home directory (`~/.dockerhub.yml`) contains a `DOCKERHUB_USER` property and a `DOCKERHUB_PASS` property.
 
 The build properties are the same as the [`docker`](#docker) target and the [`docker-tag`](#docker-tag) target combined (a `dockerfiles` map and the `latest` boolean).
+
+#### License target
+
+Scan binaries for 3rd party licenses and generate a notice file, see the [example notice](NOTICE.md) generated by this target.
+
+This target work best if a file named `.github.yml` is present at the home directory (`~/.github.yml`) and contains a valid `GITHUB_TOKEN` property.
+
+By default, this target write in `./NOTICE.md`.
+Use `-props '{noticefile: "a/different/filename.md"}'` to change the location and name of the notice file.
 
 ## Contributing
 

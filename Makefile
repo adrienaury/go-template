@@ -36,11 +36,11 @@ refresh: warning
 	@neon refresh
 
 .PHONY: compile-%
-build-%: warning
+compile-%: warning
 	@neon -props "{buildpaths: ["cmd/$*"]}" compile
 
 .PHONY: compile
-build: warning
+compile: warning
 	@neon compile
 
 .PHONY: test
@@ -59,6 +59,18 @@ release-%: warning
 release: warning
 	@neon release
 
+.PHONY: test-int
+test-int: warning
+	@neon test-int
+
+.PHONY: publish-%
+publish-%: warning
+	@neon -props "{buildpaths: ["cmd/$*"]}" publish
+
+.PHONY: publish
+publish: warning
+	@neon publish
+
 .PHONY: docker
 docker: warning
 	@neon docker
@@ -67,6 +79,14 @@ docker: warning
 docker-tag: warning
 	@neon docker-tag
 
-.PHONY: publish
-publish: warning
-	@neon publish
+.PHONY: docker-push
+docker-push: warning
+	@neon docker-push
+
+.PHONY: license-%
+license-%: warning
+	@neon -props "{buildpaths: ["cmd/$*"]}" license
+
+.PHONY: license
+license: warning
+	@neon license

@@ -17,7 +17,8 @@ Types of changes
 ## [Unreleased]
 
 - `Added` Colors in neon help target
-- `Fixed` Git ignore
+- `Added` License target to scan 3rd party licenses and generate notice file
+- `Fixed` Cleaner git ignore
 - `Changed` Improved default linters configuration, and cleaner gopls configuration
 - `Changed` Build target `docker-publish` renamed to `docker-push`
 

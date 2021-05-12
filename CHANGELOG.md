@@ -14,6 +14,12 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## [Unreleased]
+
+- `Fixed` Refresh go modules when the repo has UPPERCASE letters
+- `Fixed` Autoset permissions when starting devcontainer on a git repo that was not cloned by vscode user
+- `Fixed` CONTRIB.md was renamed to CONTRIBUTING.md and initialized with basic instructions
+
 ## [0.3.0]
 
 - `Added` Colors in neon help target

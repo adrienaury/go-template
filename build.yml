@@ -177,8 +177,9 @@ targets:
     doc: "Refresh go modules (add missing and remove unused modules)"
     depends: "info"
     steps:
-      - $: "rm -f go.mod go.sum"
-      - $: "go mod init ={mod}"
+      - if: "!exists('go.mod')"
+        then:
+          - $: "go mod init ={mod}"
       - $: "go mod tidy"
 
   # run "neon -props '{buildpaths: ["path/to/main/package1","path/to/main/package2"]}' compile" to compile specific targets

@@ -17,3 +17,16 @@ services:
     security_opt:
       - seccomp:unconfined
     entrypoint: tail -f /dev/null
+
+  ci:
+    build:
+      context: .devcontainer
+      dockerfile: Dockerfile.ci
+    user: root
+    volumes:
+      - ./:/workspace
+      - ~/.ssh:/home/vscode/.ssh:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    security_opt:
+      - seccomp:unconfined
+    entrypoint: tail -f /dev/null

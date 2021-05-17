@@ -29,10 +29,10 @@ jobs:
         run: docker-compose build
 
       - name: Start services
-        run: docker-compose up -d vscode
+        run: docker-compose up -d ci
 
       - name: Init env
-        run: docker-compose exec -T -u root -w /workspace vscode make init
+        run: docker-compose exec -T -u root -w /workspace ci make init
 
       - uses: FranzDiebold/github-env-vars-action@v2
       - name: Release
@@ -45,5 +45,5 @@ jobs:
             -u root \
             -w /workspace \
             -e PATH=/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin:/home/vscode/go/bin:/workspace/bin \
-            vscode \
+            ci \
             neon -props "{tag: ${CI_ACTION_REF_NAME}, MODULE: github.com/${CI_REPOSITORY,,}, BY: ${CI_ACTOR}}" publish

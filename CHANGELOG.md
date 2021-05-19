@@ -14,6 +14,10 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## [0.4.1]
+
+- `Fixed` Regression on GitHub release action
+
 ## [0.4.0]
 
 - `Changed` Upgrade go-devcontainer from v0.2 to v0.3

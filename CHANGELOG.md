@@ -16,9 +16,14 @@ Types of changes
 
 ## [Unreleased]
 
-- `Fixed` Refresh go modules when the repo has UPPERCASE letters
+- `Changed` Upgrade go-devcontainer from v0.2 to v0.3
+- `Changed` Execute GitHub actions on ci flavored container (smaller image)
+- `Fixed` Refresh target when the repo has UPPERCASE letters
 - `Fixed` Autoset permissions when starting devcontainer on a git repo that was not cloned by vscode user
 - `Fixed` CONTRIB.md was renamed to CONTRIBUTING.md and initialized with basic instructions
+- `Fixed` Refresh target always recreate go.mod and go.sum
+- `Fixed` Promote target does not create tag
+- `Fixed` Docker-tag target complains about missing DOCKERHUB_PASS
 
 ## [0.3.0]
 

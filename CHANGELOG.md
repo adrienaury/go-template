@@ -14,7 +14,7 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
-## [Unreleased]
+## [0.4.0]
 
 - `Changed` Upgrade go-devcontainer from v0.2 to v0.3
 - `Changed` Execute GitHub actions on ci flavored container (smaller image)

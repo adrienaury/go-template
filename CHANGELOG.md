@@ -14,6 +14,10 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## [0.6.0]
+
+- `Changed` Upgrade go-devcontainer from v0.4 to v0.5
+
 ## [0.5.0]
 
 - `Changed` Upgrade go-devcontainer from v0.3 to v0.4

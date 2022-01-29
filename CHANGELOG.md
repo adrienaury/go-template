@@ -14,6 +14,11 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## [0.7.0]
+
+- `Changed` Upgrade go-devcontainer from v0.5 to v0.6.
+- `Changed` Upgrade mlr from 5.10.2 to 6.0.0.
+
 ## [0.6.1]
 
 - `Fixed` Disabling `golint` linter because it has been archived by the owner.

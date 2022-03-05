@@ -13,6 +13,10 @@ Types of changes
 - `Removed` for now removed features.
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
+- 
+## [0.7.1]
+
+- `Fixed` release github action break when dependabot is enabled.
 
 ## [0.7.0]
 

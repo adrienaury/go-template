@@ -13,7 +13,12 @@ Types of changes
 - `Removed` for now removed features.
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
-- 
+
+## [0.8.0]
+
+- `Changed` go-devcontainer version from v0.6 to v0.7 (golang 1.8).
+- `Changed` miller version from v6.0.0 to v6.2.0
+
 ## [0.7.1]
 
 - `Fixed` release github action break when dependabot is enabled.

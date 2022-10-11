@@ -51,6 +51,12 @@
             "--disable", "scopelint",
             "--disable", "interfacer",
             "--disable", "maligned",
+            "--disable", "varcheck",
+            "--disable", "ifshort",
+            "--disable", "exhaustivestruct",
+            "--disable", "nosnakecase",
+            "--disable", "structcheck",
+            "--disable", "deadcode",
         ],
         // Golang on save
         "go.buildOnSave": "workspace",

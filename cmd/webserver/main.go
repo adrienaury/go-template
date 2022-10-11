@@ -34,18 +34,21 @@ import (
 	"github.com/rs/zerolog/log"
 )
 
-// Provisioned by ldflags
-// nolint: gochecknoglobals
+// Provisioned by ldflags.
 var (
-	name      string
-	version   string
-	commit    string
+	//nolint: gochecknoglobals
+	name    string
+	version string
+	//nolint: gochecknoglobals
+	commit string
+	//nolint: gochecknoglobals
 	buildDate string
-	builtBy   string
+	//nolint: gochecknoglobals
+	builtBy string
 )
 
 func main() {
-	// nolint: exhaustivestruct
+	//nolint: exhaustruct
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 	log.Info().Msgf("%v %v (commit=%v date=%v by=%v)", name, version, commit, buildDate, builtBy)
 	log.Info().Msg("This is the web server.")

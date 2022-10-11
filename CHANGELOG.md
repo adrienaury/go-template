@@ -14,6 +14,10 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## [1.0.0]
+
+- `Changed` go-devcontainer version from v0.7 to v1.0 (golang 1.9).
+
 ## [0.8.0]
 
 - `Changed` go-devcontainer version from v0.6 to v0.7 (golang 1.8).

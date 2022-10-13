@@ -34,15 +34,11 @@ import (
 
 // Provisioned by ldflags.
 var (
-	//nolint: gochecknoglobals
-	name    string
-	version string
-	//nolint: gochecknoglobals
-	commit string
-	//nolint: gochecknoglobals
-	buildDate string
-	//nolint: gochecknoglobals
-	builtBy string
+	name      string //nolint: gochecknoglobals
+	version   string //nolint: gochecknoglobals
+	commit    string //nolint: gochecknoglobals
+	buildDate string //nolint: gochecknoglobals
+	builtBy   string //nolint: gochecknoglobals
 )
 
 func main() {

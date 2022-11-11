@@ -144,7 +144,7 @@ targets:
         3x: true
       - if: MODULE == ""
         then:
-          - $: "git config --local remote.origin.url | sed -n 's#^.*//\\(.*\\)\\.git$#\\1#p' | tr '[:upper:]' '[:lower:]'" # .*//(.*)\.git => https://github.com/<user>/<repo>.git => github.com/<user>/<repo>
+          - $: "git config --local remote.origin.url | sed -e 's#^.\\+://##' -e 's/.git$//' | tr '[:upper:]' '[:lower:]'" # .*//(.*)\.git => https://github.com/<user>/<repo>.git => github.com/<user>/<repo>
             1=: "mod"
             3x: true
         else:

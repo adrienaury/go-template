@@ -14,6 +14,10 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## [1.1.0]
+
+- `Changed` go-devcontainer version from v1.0 to v2.0 (golang 1.20).
+
 ## [1.0.1]
 
 - `Fixed` more portable neon info, tested in GitHub CodeSpaces.

@@ -253,6 +253,7 @@ targets:
     doc: "Publish tagged binaries to Github"
     depends: ["info", "refresh", "lint", "test", "release", "test-int"]
     steps:
+      - $: git clean -f -d
       - if: len(buildpaths) == 0
         then:
           - buildpaths = appendpath("cmd", find("cmd", "*"))

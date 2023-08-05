@@ -245,6 +245,7 @@ targets:
     doc: "Run all integration tests"
     depends: ["info", "refresh", "lint", "test", "release"]
     steps:
+      - delete: venom*.log
       - $: venom run test/suites/*
 
   # run "neon -props '{buildpaths: ["path/to/main/package1","path/to/main/package2"]}' publish" to publish specific targets

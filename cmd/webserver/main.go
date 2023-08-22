@@ -56,7 +56,7 @@ func main() {
 	r.HandleFunc("/version", VersionHandler)
 }
 
-func VersionHandler(w http.ResponseWriter, r *http.Request) {
+func VersionHandler(w http.ResponseWriter, _ *http.Request) {
 	w.WriteHeader(http.StatusOK)
 	fmt.Printf("%v %v (commit=%v date=%v by=%v)\n", name, version, commit, buildDate, builtBy)
 }

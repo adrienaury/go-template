@@ -4,7 +4,7 @@ name: run webserver
 testcases:
   - name: no arguments
     steps:
-      - script: cli
+      - script: webserver
         assertions:
           - result.systemout ShouldContainSubstring Hello World!
           - result.code ShouldEqual 0

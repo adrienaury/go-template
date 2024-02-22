@@ -14,6 +14,10 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## [2.0.0]
+
+- `Changed` go-devcontainer version from v3.1 to v4.0 (golang 1.22).
+
 ## [1.3.0]
 
 - `Added` test-int-debug target.

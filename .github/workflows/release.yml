@@ -26,21 +26,21 @@ jobs:
           fetch-depth: 0
 
       - name: Build
-        run: docker-compose build
+        run: docker compose build
 
       - name: Start services
-        run: docker-compose up -d ci
+        run: docker compose up -d ci
 
       - name: Init env
-        run: docker-compose exec -T -u root -w /workspace ci make init
+        run: docker compose exec -T -u root -w /workspace ci make init
 
       - uses: FranzDiebold/github-env-vars-action@v2
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          docker-compose exec -e GITHUB_TOKEN=${GITHUB_TOKEN} -T -u root ci bash -c 'echo "GITHUB_TOKEN: ${GITHUB_TOKEN}" > ~/.github.yml'
-          docker-compose exec \
+          docker compose exec -e GITHUB_TOKEN=${GITHUB_TOKEN} -T -u root ci bash -c 'echo "GITHUB_TOKEN: ${GITHUB_TOKEN}" > ~/.github.yml'
+          docker compose exec \
             -T \
             -u root \
             -w /workspace \

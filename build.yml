@@ -253,7 +253,7 @@ targets:
   # neon -props '{testsuites: "<test suite filename>"}' test-int-debug
   test-int-debug:
     doc: "Run all integration tests"
-    depends: ["info","compile"]
+    depends: ["info", "compile"]
     steps:
       - delete: venom*.log
       - $: venom run test/suites/={testsuites}
@@ -282,9 +282,9 @@ targets:
         1x: true
       - if: snapshot
         then:
-          - $: goreleaser release -f ={BUILD_DIR}/.goreleaser.yml --rm-dist --snapshot
+          - $: goreleaser release -f ={BUILD_DIR}/.goreleaser.yml --clean --snapshot
         else:
-          - $: (export GITHUB_TOKEN=={GITHUB_TOKEN}; goreleaser release -f ={BUILD_DIR}/.goreleaser.yml --rm-dist)
+          - $: (export GITHUB_TOKEN=={GITHUB_TOKEN}; goreleaser release -f ={BUILD_DIR}/.goreleaser.yml --clean)
       - $: go mod tidy
 
   # run "neon -props '{dockerfiles: {"path/to/Dockerfile1": "path/to/root/build/context"}}' docker" to build specific Dockerfiles

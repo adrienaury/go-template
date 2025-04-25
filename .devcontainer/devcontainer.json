@@ -50,16 +50,8 @@
                     "--enable-all",
                     "--disable", "gci",
                     "--disable", "forbidigo",
-                    "--disable", "scopelint",
-                    "--disable", "interfacer",
-                    "--disable", "maligned",
-                    "--disable", "varcheck",
-                    "--disable", "ifshort",
-                    "--disable", "exhaustivestruct",
-                    "--disable", "nosnakecase",
-                    "--disable", "structcheck",
-                    "--disable", "deadcode",
-                    "--disable", "depguard"
+                    "--disable", "depguard",
+                    "--disable", "tenv"
                 ],
                 // Golang on save
                 "go.buildOnSave": "workspace",
@@ -68,7 +60,7 @@
                 "editor.formatOnSave": true,
                 "[go]": {
                     "editor.codeActionsOnSave": {
-                        "source.organizeImports": true
+                        "source.organizeImports": "always"
                     }
                 },
                 // Golang testing

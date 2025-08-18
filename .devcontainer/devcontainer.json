@@ -47,14 +47,12 @@
                 "go.lintTool": "golangci-lint",
                 "go.lintFlags": [
                     //"--fast",
-                    "--enable-all",
-                    "--disable", "gci",
+                    "--default=all",
                     "--disable", "forbidigo",
                     "--disable", "depguard",
-                    "--disable", "tenv"
+                    "--disable", "wsl"
                 ],
                 // Golang on save
-                "go.buildOnSave": "workspace",
                 "go.lintOnSave": "workspace",
                 "go.vetOnSave": "workspace",
                 "editor.formatOnSave": true,

@@ -38,7 +38,7 @@ properties:
   buildpaths: [] # By default, all paths under the cmd/ folder are built, specify a different folder list with `-props "{buildpaths: ["other/path", "to/build"]}"`
   linters: [] # List of linters to run on the lint target, if left empty : run all linters
   lintersno: # List of linters to exclude on running the lint target
-    ["forbidigo", "gci", "depguard", "tenv"]
+    ["forbidigo", "depguard", "wsl"]
   testsuites: "*.yml"
   snapshot: false # If true, do not upload release when publish target is used
   dockerfiles: # List of Dockerfiles to build, defined by a map of {key=Dockerfile name ; value=path to build context}, the image name will be determined by the extension of the Dockerfile
@@ -208,7 +208,7 @@ targets:
     steps:
       - if: len(linters) == 0
         then:
-          - $: golangci-lint run --timeout 10m --enable-all ={replace(join(appendpath("--disable", lintersno), " "), "/", " ")}
+          - $: golangci-lint run --timeout 10m --default=all ={replace(join(appendpath("--disable", lintersno), " "), "/", " ")}
             :: true
         else:
           - $: golangci-lint run --timeout 10m ={replace(join(appendpath("--enable", linters), " "), "/", " ")} ={replace(join(appendpath("--disable", lintersno), " "), "/", " ")}

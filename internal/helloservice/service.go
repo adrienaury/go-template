@@ -20,8 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// Package helloservice is common to cli and webserver.
 package helloservice
 
+// Hello greet the user.
 func Hello(name string) string {
 	return "Hello " + name + "!"
 }

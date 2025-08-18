@@ -20,8 +20,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+// Package nameservice is common to cli and webserver.
 package nameservice
 
+// GetName return the default name.
 func GetName() string {
 	return "World"
 }

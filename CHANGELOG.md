@@ -16,7 +16,7 @@ Types of changes
 
 ## [5.2.0]
 
-- `Changed` go-devcontainer version from v7.1 to v8.0 (golang 1.26.4).
+- `Changed` go-devcontainer version from v7.1 to v8.1 (golang 1.26.4).
 
 ## [5.1.0]
 

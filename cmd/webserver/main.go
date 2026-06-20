@@ -47,6 +47,7 @@ var (
 func main() {
 	//nolint: exhaustruct
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+
 	log.Info().Msgf("%v %v (commit=%v date=%v by=%v)", name, version, commit, buildDate, builtBy)
 	log.Info().Msg("This is the web server.")
 

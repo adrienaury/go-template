@@ -14,6 +14,11 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## [7.0.0]
+
+- `Changed` go-devcontainer version from v8.1 to v9.0 (golang 1.27).
+- `Changed` miller version 6.22.0.
+
 ## [6.0.0]
 
 - `Changed` go-devcontainer version from v7.1 to v8.1 (golang 1.26).

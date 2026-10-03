@@ -50,7 +50,8 @@
                     "--default=all",
                     "--disable", "forbidigo",
                     "--disable", "depguard",
-                    "--disable", "wsl"
+                    "--disable", "wsl",
+                    "--disable", "exhaustruct"
                 ],
                 // Golang on save
                 "go.lintOnSave": "workspace",

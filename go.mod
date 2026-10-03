@@ -1,6 +1,6 @@
 module github.com/adrienaury/go-template
 
-go 1.26
+go 1.27
 
 require (
 	github.com/gorilla/mux v1.8.0

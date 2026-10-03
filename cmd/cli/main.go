@@ -43,7 +43,7 @@ var (
 )
 
 func main() {
-	//nolint: exhaustruct
+	//nolint: exhaustruct_v5
 	log.Logger = log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 
 	log.Info().Msgf("%v %v (commit=%v date=%v by=%v)", name, version, commit, buildDate, builtBy)

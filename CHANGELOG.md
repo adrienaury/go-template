@@ -14,6 +14,12 @@ Types of changes
 - `Fixed` for any bug fixes.
 - `Security` in case of vulnerabilities.
 
+## [7.1.0]
+
+- `Changed` go-devcontainer version from v9.0 to v9.1 (golang 1.27.3, golangci-lint 2.15.0).
+- `Fixed` devcontainer lint flags now disable the deprecated `gomodguard` linter, like the `lint` target.
+- `Removed` accidentally committed Go checksum database cache (`C/pkg/sumdb`).
+
 ## [7.0.0]
 
 - `Changed` go-devcontainer version from v8.1 to v9.0 (golang 1.27).

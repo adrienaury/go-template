@@ -51,6 +51,7 @@
                     "--disable", "forbidigo",
                     "--disable", "depguard",
                     "--disable", "wsl",
+                    "--disable", "gomodguard",
                     "--disable", "exhaustruct"
                 ],
                 // Golang on save
